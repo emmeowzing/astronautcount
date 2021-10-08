@@ -11,5 +11,8 @@ executors:
 
 commands:
   tweet:
+    description: Send a Tweet
     steps:
-      - 
+      - run:
+          name: Install Python package
+          command: pip install
