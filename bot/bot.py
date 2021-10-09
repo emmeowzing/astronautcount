@@ -8,14 +8,15 @@ import tweepy
 import os
 import requests
 
-from json import JSONDecodeError
-
 
 if API_KEY := os.getenv('API_KEY') is None:
     raise EnvironmentError('Must set API_KEY environment variable.')
 
 if SECRET_KEY := os.getenv('SECRET_KEY') is None:
     raise EnvironmentError('Must set SECRET_KEY environment variable.')
+
+
+
 
 
 def pull_astronaut_list(url: str ='http://api.open-notify.org/astros.json') -> Dict[str, Any]:
@@ -26,14 +27,9 @@ def pull_astronaut_list(url: str ='http://api.open-notify.org/astros.json') -> D
         url: the URL to pull data from.
 
     Returns:
-
+        A dict containing the astronaut count and names.
     """
-    data = dict()
-
-    try:
-        data = requests.get(url).json()
-    except JSONDecodeError:
-        exit(1)
+    data = requests.get(url).json()
 
     return data
 

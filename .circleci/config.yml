@@ -10,9 +10,36 @@ executors:
       - image: python:3.9
 
 commands:
-  tweet:
+  astrobot_tweet:
     description: Send a Tweet
     steps:
       - run:
           name: Install Python package
-          command: pip install
+          command: |
+            pip install -r requirements.txt
+            python setup.py install
+      - run:
+          name: Execute astrobot
+          command: |
+            astrobot
+
+jobs:
+  tweet:
+    executor: python3
+    steps:
+      - checkout
+      - astrobot_tweet
+
+workflows:
+  version: 2
+
+  daily-tweet:
+    triggers:
+      - schedule:
+          cron: "5 8 * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - tweet
