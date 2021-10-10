@@ -11,7 +11,6 @@ variable "asg-min-size" { default = 1 }
 
 variable "common-ingress" {
   default = [
-    # Bunch of rules from https://docs.mysterium.network/node-runners/setup/docker/
     {
       name      = "SSH"
       protocol  = "tcp"
@@ -20,3 +19,17 @@ variable "common-ingress" {
     }
   ]
 } # type: List[Dict[String, Union[String, int]]]
+
+variable "spot-instance-list" {
+  type = list(map(string))
+  default = [
+    {
+      instance_type     = "t2.micro"
+      weighted_capacity = "1"
+    },
+    {
+      instance_type     = "t3.nano"
+      weighted_capacity = "10"
+    }
+  ]
+}

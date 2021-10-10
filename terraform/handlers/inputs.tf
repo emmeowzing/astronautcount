@@ -9,3 +9,4 @@ variable "asg-health-check-grace-period" {}
 variable "asg-max-size" { default = 1 }
 variable "asg-min-size" { default = 1 }
 variable "common-ingress" {}
+variable "spot-instance-list" { type = list(map(string)) }
