@@ -11,4 +11,5 @@ module "webhook_handler" {
   asg-health-check-grace-period = var.asg-health-check-grace-period
   asg-max-size = var.asg-max-size
   asg-min-size = var.asg-min-size
+  common-ingress = var.common-ingress
 }
