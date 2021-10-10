@@ -237,20 +237,23 @@ workflows:
   infrastructure-on-commit:
     jobs:
       - terraform_validate:
+          name: terraform-validate
           context:
             - production
 
       - terraform_plan:
+          name: terraform-plan
           context:
             - production
           requires:
-            - terraform_validate
+            - terraform-validate
 
       - terraform_apply:
+          name: terraform-apply
           context:
             - production
           requires:
-            - terraform_plan
+            - terraform-plan
 
   daily:
     triggers:
