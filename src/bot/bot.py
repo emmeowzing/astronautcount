@@ -41,6 +41,20 @@ def pull_astronaut_list(url: str ='http://api.open-notify.org/astros.json') -> D
     return data
 
 
+def englishified_list(items: List[str]) -> str:
+    """
+    Create a nice-English list of items.
+    """
+    formatted_string = ''
+    n_items = len(items) - 1
+    for i, item in enumerate(items):
+        if i == n_items and i != 0:
+            formatted_string += f'and {item}'
+        else:
+            formatted_string += f'{item}, '
+    return formatted_string
+
+
 def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
     """
     Parse a list of astronauts and return a list of names grouped by craft they reside on.
@@ -67,9 +81,10 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
             if person['craft'] == ship:
                 transposed_astronaut_list[ship].append(person['name'])
 
-    grouped_astronauts_string = f'on the {ship}, '.join(
-        f', '.join(transposed_astronaut_list[ship]) for ship in transposed_astronaut_list
-    )
+    grouped_astronauts_string = ''
+    for ship in transposed_astronaut_list:
+        grouped_astronauts_string += englishified_list(transposed_astronaut_list[ship])
+        grouped_astronauts_string += f'on the {ship}'
 
     print(grouped_astronauts_string)
 
