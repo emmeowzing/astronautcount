@@ -81,7 +81,7 @@ resource "aws_autoscaling_group" "astronautcount" {
 
   tag {
     key                 = "Name"
-    value               = var.instance-name-prefix != "" ? "${var.instance-name-prefix}-astronautcount-${data.aws_region.region.name}" : "astronautcount-${data.aws_region.region.name}"
+    value               = var.instance-name-prefix != "" ? "${var.instance-name-prefix}-${data.aws_region.region.name}" : "astronautcount-${data.aws_region.region.name}"
     propagate_at_launch = true
   }
 
