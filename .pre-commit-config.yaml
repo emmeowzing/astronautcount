@@ -21,6 +21,8 @@ repos:
     rev: 2.1.5
     hooks:
       - id: shellcheck
+        args:
+          - -x
 
   - repo: https://github.com/zahorniak/pre-commit-circleci.git
     rev: v0.2

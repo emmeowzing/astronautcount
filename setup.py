@@ -19,7 +19,7 @@ setup(
     author='Brandon Doyle',
     author_email='bjd2385.linux@gmail.com',
     keywords='Astronaut, NASA',
-    package_dir={'': 'bot'},
+    package_dir={'': 'src'},
     packages=find_packages(where='src'),
     python_requires='>=3.9, <4',
     install_requires=[
