@@ -84,7 +84,7 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
     grouped_astronauts_string = ''
     for ship in transposed_astronaut_list:
         grouped_astronauts_string += englishified_list(transposed_astronaut_list[ship])
-        grouped_astronauts_string += f'on the {ship}'
+        grouped_astronauts_string += f' on the {ship}'
 
     print(grouped_astronauts_string)
 
