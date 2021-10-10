@@ -21,6 +21,7 @@ if TWITTER_ACCESS_TOKEN := os.getenv('TWITTER_ACCESS_TOKEN') is None:
 if TWITTER_ACCESS_TOKEN_SECRET := os.getenv('TWITTER_ACCESS_TOKEN_SECRET') is None:
     raise EnvironmentError('Must set TWITTER_ACCESS_TOKEN_SECRET environment variable.')
 
+print(TWITTER_API_KEY, TWITTER_SECRET_KEY)
 auth = tweepy.OAuthHandler(TWITTER_API_KEY, TWITTER_SECRET_KEY)
 auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
