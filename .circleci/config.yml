@@ -87,7 +87,7 @@ commands:
                       -backend-config="access_key=${AWS_ACCESS_KEY_ID}" \
                       -backend-config="secret_key=${AWS_SECRET_ACCESS_KEY}" \
                       << parameters.parameters >>
-                  if ! terraform workspace select astronautcount-<< parameters.region >>
+                  if ! [ "$(terraform workspace list | grep -o astronautcount-<< parameters.region >> )" ]
                   then
                       terraform workspace new astronautcount-<< parameters.region >>
                   fi
