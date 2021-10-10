@@ -10,12 +10,12 @@ data "aws_availability_zones" "available" {
 }
 
 resource "aws_subnet" "astronautcount" {
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = data.aws_vpc.main.id
   cidr_block = "10.0.1.0/24"
 }
 
 resource "aws_security_group" "astronautcount-ingress" {
-  vpc_id = data.aws_vpc.default.id
+  vpc_id = data.aws_vpc.main.id
 
   # Public subnet allowing ingress on common ports.
   dynamic "ingress" {
