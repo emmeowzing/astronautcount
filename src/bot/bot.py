@@ -120,4 +120,10 @@ def tweet() -> None:
             tweet += f', including {grouped_astronauts}'
 
     print(tweet)
-    api.update_status(status=tweet)
+    try:
+        api.update_status(status=tweet)
+    except tweepy.errors.Forbidden as msg:
+        # Don't fail my CircleCI job due to forbidden messages. I can refine this later.
+        if 'duplicate' not in msg:
+            raise ValueError(f'Failing CircleCI job due to non-duplicate forbidden error: {msg}')
+        print(msg)
