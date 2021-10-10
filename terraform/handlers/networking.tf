@@ -1,5 +1,6 @@
 data "aws_vpc" "default" {
   default = true
+  cidr_block = "10.0.0.0/16"
 }
 
 # Ensure the selected availability zones actually exist.
@@ -7,16 +8,13 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-data "aws_instance" "astronautcount" {
-  filter {
-    name = "tag:Name"
-    values = [var.instance-name-prefix != "" ? "${var.instance-name-prefix}-${data.aws_region.region.name}" : "astronautcount-${data.aws_region.region.name}"]
-  }
+resource "aws_subnet" "astronautcount" {
+  vpc_id = data.aws_vpc.default.id
+  cidr_block = "10.0.1.0/24"
 }
 
-resource "aws_eip" "astronautcount" {
-  vpc = true
-  instance = data.aws_instance.astronautcount.id
+resource "aws_network_interface" "astronautcount" {
+  security_groups = [aws_security_group.astronautcount-ingress.id]
 }
 
 resource "aws_security_group" "astronautcount-ingress" {

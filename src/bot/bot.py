@@ -67,6 +67,7 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
 
         'Pyotr Dubrov, Thomas Pesquet, Megan McArthur on the ISS'
     """
+    astronaut_list.sort()
     spacecraft = list()
 
     for person in astronaut_list:

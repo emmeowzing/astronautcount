@@ -36,6 +36,15 @@ resource "aws_launch_template" "astronautcount" {
       volume_type           = "gp2"
     }
   }
+
+  network_interfaces {
+    description = "ENI with a static IP address"
+    delete_on_termination = false
+    device_index = 1
+    associate_public_ip_address = true
+    security_groups = [aws_security_group.astronautcount-ingress.id]
+    subnet_id = aws_subnet.astronautcount.id
+  }
 }
 
 resource "aws_autoscaling_group" "astronautcount" {
