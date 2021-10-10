@@ -29,7 +29,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'astrobot=bot:tweet',
+            'astrobot=bot.bot:tweet',
         ],
     },
     project_urls={  # Optional
