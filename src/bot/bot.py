@@ -123,7 +123,7 @@ def tweet() -> None:
     try:
         api.update_status(status=tweet)
     except tweepy.errors.Forbidden as msg:
-        # Don't fail my CircleCI job due to forbidden messages. I can refine this later.
-        if 'duplicate' not in msg:
-            raise ValueError(f'Failing CircleCI job due to non-duplicate forbidden error: {msg}')
-        print(msg)
+        # Don't fail my CircleCI job due to duplicate-induced forbidden messages. I can refine this later.
+        if 'duplicate' not in str(msg):
+            raise ValueError(f'Failing CircleCI job due to non-duplicate forbidden error: {str(msg)}')
+        print(str(msg))
