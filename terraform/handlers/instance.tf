@@ -40,7 +40,7 @@ resource "aws_launch_template" "astronautcount" {
   network_interfaces {
     description = "ENI with a static IP address"
     delete_on_termination = false
-    device_index = 1
+    device_index = 0
     associate_public_ip_address = true
     security_groups = [aws_security_group.astronautcount-ingress.id]
     subnet_id = aws_subnet.astronautcount.id
