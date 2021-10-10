@@ -1,7 +1,6 @@
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
   enable_dns_support = true
-
 }
 
 # Ensure the selected availability zones actually exist.
@@ -10,12 +9,12 @@ data "aws_availability_zones" "available" {
 }
 
 resource "aws_subnet" "astronautcount" {
-  vpc_id = data.aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id = aws_vpc.main.id
+  cidr_block = "10.0.1.0/24"s
 }
 
 resource "aws_security_group" "astronautcount-ingress" {
-  vpc_id = data.aws_vpc.main.id
+  vpc_id = aws_vpc.main.id
 
   # Public subnet allowing ingress on common ports.
   dynamic "ingress" {
