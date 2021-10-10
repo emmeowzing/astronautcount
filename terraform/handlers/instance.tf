@@ -47,7 +47,7 @@ resource "aws_autoscaling_group" "astronautcount" {
   health_check_grace_period = var.asg-health-check-grace-period
   health_check_type         = "ELB"
   termination_policies      = ["NewestInstance"]
-  max_instance_lifetime     = var.max-instance-lifetime
+  max_instance_lifetime     = 31536000 # one year
   availability_zones        = toset([element(data.aws_availability_zones.available.names, 0)])
 
   mixed_instances_policy {
