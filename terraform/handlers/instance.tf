@@ -38,7 +38,7 @@ resource "aws_launch_template" "astronautcount" {
   }
 
   placement {
-    availability_zone = toset([element(data.aws_availability_zones.available.names, 0)])
+    availability_zone = element(data.aws_availability_zones.available.names, 0)
   }
 
   network_interfaces {
