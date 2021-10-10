@@ -3,7 +3,7 @@
 import pathlib
 
 from setuptools import setup, find_packages
-import bot
+from src import bot
 
 here = pathlib.Path(__file__).parent.resolve()
 

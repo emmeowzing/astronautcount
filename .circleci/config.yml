@@ -33,7 +33,7 @@ jobs:
 workflows:
   version: 2
 
-  daily-tweet:
+  daily:
     triggers:
       - schedule:
           cron: "5 8 * * *"

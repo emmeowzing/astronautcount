@@ -1,3 +1,9 @@
 include *.txt
 include *.yaml
 recursive-include bot *.py
+
+# added by check-manifest
+include .mypy.ini
+include Dockerfile
+include LICENSE
+recursive-include src *.py
