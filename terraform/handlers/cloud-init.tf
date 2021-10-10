@@ -6,7 +6,7 @@ data "template_file" "ssh" {
   }
 }
 
-data "template_cloudinit_config" "myst" {
+data "template_cloudinit_config" "astronautcount" {
   gzip          = false
   base64_encode = true
 
