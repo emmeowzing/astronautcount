@@ -7,6 +7,18 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+data "aws_instance" "astronautcount" {
+  filter {
+    name = "tag:Name"
+    values = [var.instance-name-prefix != "" ? "${var.instance-name-prefix}-${data.aws_region.region.name}" : "astronautcount-${data.aws_region.region.name}"]
+  }
+}
+
+resource "aws_eip" "astronautcount" {
+  vpc = true
+  instance = data.aws_instance.astronautcount.id
+}
+
 resource "aws_security_group" "astronautcount-ingress" {
   vpc_id = data.aws_vpc.default.id
 
