@@ -49,7 +49,7 @@ def englishified_list(items: List[str]) -> str:
     n_items = len(items) - 1
     for i, item in enumerate(items):
         if i == n_items and i != 0:
-            formatted_string += f'and {item}'
+            formatted_string += f'& {item}'
         else:
             formatted_string += f'{item}, '
     return formatted_string
