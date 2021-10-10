@@ -237,6 +237,8 @@ workflows:
     jobs:
       - terraform_validate:
           name: terraform-validate
+          context:
+            - production
 
       - terraform_plan:
           name: terraform-plan
