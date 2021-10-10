@@ -103,5 +103,5 @@ def tweet() -> None:
 
         if len(tweet) + len(f', including {grouped_astronauts}') <= TWITTER_CHARACTER_LIMIT:
             tweet += f', including {grouped_astronauts}'
-
+    print(tweet)
     api.update_status(status=tweet)
