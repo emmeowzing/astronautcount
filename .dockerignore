@@ -4,3 +4,6 @@
 .gitignore
 .github
 .circleci
+*.egg-info
+.idea
+.mypy_cache
