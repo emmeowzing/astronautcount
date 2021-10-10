@@ -2,12 +2,18 @@ version: 2.1
 
 orbs: {}
 
-parameters: {}
+parameters:
+  default_region:
+    type: string
+    default: us-east-2
 
 executors:
   python3:
     docker:
       - image: python:3.9
+  terraform_container:
+    docker:
+      - image: hashicorp/terraform:1.0.7
 
 commands:
   astrobot_tweet:
@@ -23,12 +29,241 @@ commands:
           command: |
             astrobot
 
+  terraform_exec:
+    parameters:
+      command:
+        type: enum
+        enum:
+          - plan
+          - validate
+          - apply
+          - show
+          - destroy
+      parameters:
+        type: string
+        default: ''
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+      workspace:
+        type: enum
+        default: development
+        enum:
+          - development
+          - production
+    steps:
+      - run:
+          name: Add packages
+          command: apk add git openssl
+      - checkout
+
+      - when:
+          condition:
+            not:
+              equal: [destroy, << parameters.command >>]
+          steps:
+            # Restore a former terraform init.
+            - restore_cache:
+                name: Restoring Cache [terraform init]
+                key: tfinit-<< parameters.workspace >>-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+
+            # Restore a former terraform plan.
+            - when:
+                condition:
+                  not:
+                    equal: [plan, << parameters.command >>]
+                steps:
+                  - restore_cache:
+                      name: Restoring Cache [terraform plan]
+                      key: tfplan-<< parameters.workspace >>-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+            - run:
+                name: Switching to Terraform workspace "astronautcount-<< parameters.workspace >>-<< parameters.region >>"
+                command: |
+                  cd ~/project/<< parameters.workspace >>
+                  if [ -d .terraform ]
+                  then
+                      terraform workspace select astronautcount-<< parameters.workspace >>-<< parameters.region >>
+                      exit 0
+                  fi
+                  terraform init -input=false \
+                      -no-color \
+                      -backend-config="key=state/terraform-<< parameters.workspace >>-<< parameters.region >>.tfstate" \
+                      -backend-config="region=us-east-2" \
+                      -backend-config="bucket=astronautcount-<< parameters.workspace >>-terraform-state" \
+                      -backend-config="access_key=${AWS_ACCESS_KEY_ID}" \
+                      -backend-config="secret_key=${AWS_SECRET_ACCESS_KEY}" \
+                      << parameters.parameters >>
+                  if ! terraform workspace select astronautcount-<< parameters.workspace >>-<< parameters.region >>
+                  then
+                      terraform workspace new astronautcount-<< parameters.workspace >>-<< parameters.region >>
+                  fi
+
+            # Run the selected terraform command, respecting available flags on validate option.
+            - run:
+                name: Terraform << parameters.command >>
+                command: terraform -chdir=<< parameters.workspace >> << parameters.command >> -no-color << parameters.parameters >>
+
+            # Save terraform plan following terraform_plan job run.
+            - when:
+                condition:
+                  equal: [plan, << parameters.command >>]
+                steps:
+                  - save_cache:
+                      name: Saving Cache [terraform plan]
+                      key: tfplan-<< parameters.workspace >>-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+                      paths:
+                        - ~/project/<< parameters.workspace >>/.terraform.plan
+
+            # Save terraform init.
+            - save_cache:
+                name: Saving Cache [terraform init]
+                key: tfinit-<< parameters.workspace >>-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+                paths:
+                  - ~/project/<< parameters.workspace >>/.terraform/
+
+      # Terraform destroy will only ever be ran against development, never prod.
+      - when:
+          condition:
+            and:
+              - equal: [destroy, << parameters.command >>]
+              - equal: [development, << parameters.workspace>>]
+          steps:
+            # Restore most recent init and plan caches.
+            - restore_cache:
+                name: Restoring Cache [terraform init]
+                key: tfinit-development-<< parameters.region >>-
+            - run:
+                name: Terraform << parameters.command >> [<< parameters.workspace >>]
+                command: terraform -chdir=development destroy -no-color << parameters.parameters >>
+
 jobs:
   tweet:
     executor: python3
     steps:
       - checkout
       - astrobot_tweet
+
+  terraform_plan:
+    executor: terraform_container
+    parameters:
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+      workspace:
+        type: enum
+        default: development
+        enum:
+          - development
+          - production
+    resource_class: small
+    steps:
+      - terraform_exec:
+          command: plan
+          region: << parameters.region >>
+          workspace: << parameters.workspace >>
+          parameters: |
+            -input=false \
+            -var "region=<< parameters.region >>" \
+            -var "instance-name-prefix=${INSTANCE_NAME_PREFIX}" \
+            -var "root-block-device-size=8" \
+            -var "public-key=${SSH_KEY_NAME}" \
+            -var "ssh-public-key=${SSH_PUBLIC_KEY}" \
+            -var "instance-owner=${INSTANCE_OWNER}" \
+            -var "instance-type=t2.micro" \
+            -var "asg-health-check-grace-period=300" \
+            -var "asg-max-size=4" \
+            -var "asg-min-size=1" \
+            -out=.terraform.plan
+
+  terraform_show:
+    executor: terraform_container
+    parameters:
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+      workspace:
+        type: enum
+        default: development
+        enum:
+          - development
+          - production
+    resource_class: small
+    steps:
+      - terraform_exec:
+          command: show
+          region: << parameters.region >>
+          workspace: << parameters.workspace >>
+
+  terraform_validate:
+    executor: terraform_container
+    parameters:
+      workspace:
+        type: enum
+        default: development
+        enum:
+          - development
+          - production
+    resource_class: small
+    steps:
+      - terraform_exec:
+          command: validate
+          workspace: << parameters.workspace >>
+
+  terraform_apply:
+    executor: terraform_container
+    parameters:
+      workspace:
+        type: enum
+        default: development
+        enum:
+          - development
+          - production
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+    resource_class: small
+    steps:
+      - terraform_exec:
+          command: apply
+          region: << parameters.region >>
+          workspace: << parameters.workspace >>
+          parameters: |
+            -auto-approve \
+            -input=false \
+            .terraform.plan
+
+  terraform_destroy:
+    executor: terraform_container
+    parameters:
+      workspace:
+        type: enum
+        default: development
+        enum:
+          - development
+          - production
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+    resource_class: small
+    steps:
+      - terraform_exec:
+          # alias for apply -destroy. Not sure why I can't pass it a cached plan.
+          command: destroy
+          region: << parameters.region >>
+          workspace: << parameters.workspace >>
+          parameters: |
+            -auto-approve \
+            -input=false \
+            -var "region=<< parameters.region >>" \
+            -var "instance-name-prefix=${INSTANCE_NAME_PREFIX}" \
+            -var "root-block-device-size=8" \
+            -var "public-key=${SSH_KEY_NAME}" \
+            -var "ssh-public-key=${SSH_PUBLIC_KEY}" \
+            -var "instance-owner=${INSTANCE_OWNER}" \
+            -var "instance-type=t2.micro" \
+            -var "asg-health-check-grace-period=300" \
+            -var "asg-max-size=4" \
+            -var "asg-min-size=1"
 
 workflows:
   version: 2
@@ -40,6 +275,12 @@ workflows:
             branches:
               ignore:
                 - master
+
+  infrastructure-on-commit:
+    jobs:
+      - terraform_plan:
+          context:
+            - production
 
   daily:
     triggers:
