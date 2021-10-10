@@ -72,9 +72,9 @@ commands:
             - run:
                 name: Initializing Terraform
                 command: |
-                  cd ~/project/terraform
-                  if ! [ -d .terraform ]
+                  if ! [ -d terraform/.terraform ]
                   then
+                      cd terraform/
                       terraform init -input=false \
                           -no-color \
                           -backend-config="key=state/terraform-<< parameters.region >>.tfstate" \
@@ -90,7 +90,6 @@ commands:
             - run:
                 name: Terraform << parameters.command >>
                 command: |
-                  ls -lash ~/project/terraform
                   terraform -chdir=terraform << parameters.command >> -no-color << parameters.parameters >>
 
             # Save terraform plan following terraform_plan job run.
