@@ -172,7 +172,7 @@ jobs:
             -var "instance-owner=${INSTANCE_OWNER}" \
             -var "instance-type=t2.micro" \
             -var "asg-health-check-grace-period=300" \
-            -var "asg-max-size=4" \
+            -var "asg-max-size=1" \
             -var "asg-min-size=1" \
             -out=.terraform.plan
 
@@ -263,7 +263,7 @@ jobs:
             -var "instance-owner=${INSTANCE_OWNER}" \
             -var "instance-type=t2.micro" \
             -var "asg-health-check-grace-period=300" \
-            -var "asg-max-size=4" \
+            -var "asg-max-size=1" \
             -var "asg-min-size=1"
 
 workflows:
@@ -279,7 +279,15 @@ workflows:
 
   infrastructure-on-commit:
     jobs:
+      - terraform_validate:
+          context:
+            - production
+
       - terraform_plan:
+          context:
+            - production
+
+      - terraform_apply:
           context:
             - production
 
