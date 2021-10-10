@@ -89,7 +89,9 @@ commands:
             # Run the selected terraform command, respecting available flags on validate option.
             - run:
                 name: Terraform << parameters.command >>
-                command: terraform -chdir=terraform << parameters.command >> -no-color << parameters.parameters >>
+                command: |
+                  ls -lash ~/project/terraform
+                  terraform -chdir=terraform << parameters.command >> -no-color << parameters.parameters >>
 
             # Save terraform plan following terraform_plan job run.
             - when:
