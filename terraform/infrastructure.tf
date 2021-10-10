@@ -12,4 +12,5 @@ module "webhook_handler" {
   asg-max-size = var.asg-max-size
   asg-min-size = var.asg-min-size
   common-ingress = var.common-ingress
+  spot-instance-list = var.spot-instance-list
 }
