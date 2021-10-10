@@ -7,7 +7,7 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-resource "aws_security_group" "myst-ingress" {
+resource "aws_security_group" "astronautcount-ingress" {
   vpc_id = data.aws_vpc.default.id
 
   # Public subnet allowing ingress on common ports.
@@ -33,6 +33,6 @@ resource "aws_security_group" "myst-ingress" {
   }
 
   tags = {
-    Name = "myst-net"
+    Name = "astronautcount-net"
   }
 }
