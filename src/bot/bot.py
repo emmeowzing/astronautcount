@@ -108,13 +108,13 @@ def tweet() -> None:
     number_of_astronauts = astronauts['number']
 
     if number_of_astronauts == 0:
-        tweet = 'There are no people in space today!'
+        tweet = 'There are no people in space!'
     elif number_of_astronauts == 1:
         grouped_astronauts = parse_astronauts(astronauts['people'])
-        tweet = 'There is one person in space today, {grouped_astronauts}'
+        tweet = 'There is one person in space, {grouped_astronauts}'
     elif number_of_astronauts > 1:
         grouped_astronauts = parse_astronauts(astronauts['people'])
-        tweet = f'There are {number_of_astronauts} people in space today'
+        tweet = f'There are {number_of_astronauts} people in space'
 
         # TODO: logically cut string until we're below the character threshold for better tweet content.
         if len(tweet) + len(f', including {grouped_astronauts}') <= TWITTER_CHARACTER_LIMIT:
