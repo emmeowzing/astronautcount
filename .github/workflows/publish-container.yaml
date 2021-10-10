@@ -37,3 +37,4 @@ jobs:
           tags: bjd2385/astrobot:latest
 
       - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
