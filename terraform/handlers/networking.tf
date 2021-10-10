@@ -13,10 +13,6 @@ resource "aws_subnet" "astronautcount" {
   cidr_block = "10.0.1.0/24"
 }
 
-resource "aws_network_interface" "astronautcount" {
-  security_groups = [aws_security_group.astronautcount-ingress.id]
-}
-
 resource "aws_security_group" "astronautcount-ingress" {
   vpc_id = data.aws_vpc.default.id
 
