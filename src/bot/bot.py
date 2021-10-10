@@ -73,6 +73,8 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
         ) for ship in transposed_astronaut_list
     )
 
+    print(grouped_astronauts_string)
+
     return grouped_astronauts_string
 
 
@@ -100,6 +102,7 @@ def tweet() -> None:
         grouped_astronauts = parse_astronauts(astronauts['people'])
         tweet = f'There are {number_of_astronauts} people in space today'
 
+        # TODO: logically cut string until we're below the character threshold for better tweet content.
         if len(tweet) + len(f', including {grouped_astronauts}') <= TWITTER_CHARACTER_LIMIT:
             tweet += f', including {grouped_astronauts}'
 
