@@ -68,9 +68,7 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
                 transposed_astronaut_list[ship].append(person['name'])
 
     grouped_astronauts_string = f'on the {ship}, '.join(
-        '{astronaut}, '.join(
-            astronaut for astronaut in transposed_astronaut_list[ship]
-        ) for ship in transposed_astronaut_list
+        f', '.join(transposed_astronaut_list[ship]) for ship in transposed_astronaut_list
     )
 
     print(grouped_astronauts_string)
