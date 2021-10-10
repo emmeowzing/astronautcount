@@ -13,7 +13,7 @@ jobs:
       - name: Check out master
         uses: actions/checkout@master
         with:
-          repository: bjd2385/HqO
+          repository: bjd2385/astronautcount
 
       # Cf. https://github.com/marketplace/actions/build-and-push-docker-images?version=v2.6.1
       - name: Set up QEMU
