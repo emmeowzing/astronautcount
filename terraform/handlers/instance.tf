@@ -21,7 +21,7 @@ resource "aws_launch_template" "astronautcount" {
   image_id               = data.aws_ami.ubuntu.id
   vpc_security_group_ids = [aws_security_group.astronautcount-ingress.id]
   instance_type          = var.instance-type
-  #user_data              = data.template_cloudinit_config.astronautcount.rendered
+  user_data              = data.template_cloudinit_config.astronautcount.rendered
 
   lifecycle {
     create_before_destroy = true

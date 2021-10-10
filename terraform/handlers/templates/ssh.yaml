@@ -1,0 +1,36 @@
+#cloud-config
+users:
+  - default
+  - name: astronaut
+    ssh_import_id: None
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+    sudo:
+      - 'ALL=(ALL) NOPASSWD:ALL'
+    shell: /bin/bash
+
+write_files:
+  - path: /etc/ssh/sshd_config
+    content: |
+      Port 3301
+      ListenAddress 0.0.0.0
+      ListenAddress ::
+      LogLevel ERROR
+      PermitRootLogin no
+      ChallengeResponseAuthentication no
+      UsePAM yes
+      AllowAgentForwarding no
+      GatewayPorts no
+      X11Forwarding no
+      KerberosAuthentication no
+      PrintMotd no
+      TCPKeepAlive yes
+      ClientAliveInterval 3
+      ClientAliveCountMax 3
+      AcceptEnv LANG LC_*
+      Subsystem       sftp    /usr/lib/openssh/sftp-server
+      AllowUsers astronaut
+
+runcmd:
+  - 'systemctl restart sshd.service'
