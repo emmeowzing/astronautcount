@@ -33,6 +33,14 @@ jobs:
 workflows:
   version: 2
 
+  test-tweet-on-commit:
+    jobs:
+      - tweet:
+          filters:
+            branches:
+              ignore:
+                - master
+
   daily:
     triggers:
       - schedule:
