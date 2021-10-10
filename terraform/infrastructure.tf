@@ -1,5 +1,5 @@
 module "webhook_handler" {
-  source = "handlers/"
+  source = "./handlers/"
 
   region = var.region
   instance-name-prefix = var.instance-name-prefix
