@@ -15,7 +15,7 @@ module "webhook_handler" {
   spot-instance-list            = var.spot-instance-list
 }
 
-module "cirlceci_environment" {
+module "circleci_environment" {
   source = "./circleci/"
 
   circleci-token = var.circleci-token

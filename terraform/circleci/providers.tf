@@ -8,5 +8,5 @@ terraform {
 }
 
 provider "circleci" {
-  api_token = var.cirlceci-token
+  api_token = var.circlceci-token
 }
