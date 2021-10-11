@@ -19,6 +19,11 @@ resource "aws_network_interface" "reused" {
   security_groups = [aws_security_group.astronautcount-ingress.id]
 }
 
+resource "aws_eip" "static" {
+  vpc = true
+  network_interface = aws_network_interface.reused.id
+}
+
 resource "aws_security_group" "astronautcount-ingress" {
   vpc_id = aws_vpc.main.id
 
