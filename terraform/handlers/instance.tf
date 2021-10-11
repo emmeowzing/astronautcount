@@ -18,7 +18,7 @@ data "aws_region" "region" {}
 
 resource "aws_iam_instance_profile" "astronautcount" {
   name = "astronautcount"
-  role = aws_iam_role.role.astronautcount
+  role = aws_iam_role.astronautcount.name
 }
 
 resource "aws_iam_role" "astronautcount" {
