@@ -26,6 +26,15 @@ resource "aws_iam_role" "astronautcount" {
 
 data "aws_iam_policy_document" "inline_policy" {
   version = "2012-10-17"
+
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
   statement {
     actions   = ["ec2:*"]
     effect    = "Allow"
