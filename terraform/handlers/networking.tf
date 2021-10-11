@@ -13,6 +13,12 @@ resource "aws_subnet" "astronautcount" {
   cidr_block = "10.0.1.0/24"
 }
 
+resource "aws_network_interface" "reused" {
+  subnet_id = aws_subnet.astronautcount.id
+  description = "ENI to be reused in ASGed instances"
+  security_groups = [aws_security_group.astronautcount-ingress.id]
+}
+
 resource "aws_security_group" "astronautcount-ingress" {
   vpc_id = aws_vpc.main.id
 

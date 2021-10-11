@@ -48,6 +48,7 @@ resource "aws_launch_template" "astronautcount" {
     associate_public_ip_address = true
     security_groups = [aws_security_group.astronautcount-ingress.id]
     subnet_id = aws_subnet.astronautcount.id
+    network_interface_id = aws_network_interface.reused.id
   }
 }
 
