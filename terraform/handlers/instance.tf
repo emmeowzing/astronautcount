@@ -26,14 +26,10 @@ resource "aws_iam_role" "astronautcount" {
 
 data "aws_iam_policy_document" "inline_policy" {
   version = "2012-10-17"
-  statement = {
+  statement {
     actions   = ["ec2:*"]
     effect    = "Allow"
     resources = ["*"]
-
-    principals = {
-
-    }
   }
 }
 
