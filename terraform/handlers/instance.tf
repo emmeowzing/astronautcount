@@ -22,6 +22,21 @@ resource "aws_iam_role" "astronautcount" {
     name   = "astronautcount eip"
     policy = data.aws_iam_policy_document.inline_policy.json
   }
+
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
+
+data "aws_iam_policy_document" "assume_role_policy" {
+  version = "2012-10-17"
+
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+  }
 }
 
 data "aws_iam_policy_document" "inline_policy" {
