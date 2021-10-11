@@ -40,15 +40,20 @@ resource "aws_launch_template" "astronautcount" {
     availability_zone = element(data.aws_availability_zones.available.names, 0)
   }
 
-  network_interfaces {
-    description = "ENI with a static IP address"
-    delete_on_termination = false
-    device_index = 0
-    associate_public_ip_address = false
-    security_groups = [aws_security_group.astronautcount-ingress.id]
-    subnet_id = ""
-    network_interface_id = aws_network_interface.reused.id
-  }
+  # There is some kind of bug with reusing the same EIP in an ASG while referencing a template - not sure why.
+  # Instead, I've opted to re-associate the ENI/EIP with an instance with cloud-init and by assigning an instance profile -
+  # https://forums.aws.amazon.com/message.jspa?messageID=864259
+  # Error: Error creating Auto Scaling Group: ValidationError: You must use a valid fully-formed launch template. A network interface may not specify both a network interface ID and a subnet
+
+  #network_interfaces {
+  #  description = "ENI with a static IP address"
+  #  delete_on_termination = false
+  #  device_index = 0
+  #  associate_public_ip_address = false
+  #  security_groups = [aws_security_group.astronautcount-ingress.id]
+  #  subnet_id = ""
+  #  network_interface_id = aws_network_interface.reused.id
+  #}
 }
 
 resource "aws_autoscaling_group" "astronautcount" {

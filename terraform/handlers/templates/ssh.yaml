@@ -34,3 +34,4 @@ write_files:
 
 runcmd:
   - 'systemctl restart sshd.service'
+  - 'aws '

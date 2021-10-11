@@ -1,10 +1,5 @@
-resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
-}
-
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
+data "aws_vpc" "default" {
+  default = true
 }
 
 # Ensure the selected availability zones actually exist.
@@ -12,25 +7,12 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-resource "aws_subnet" "astronautcount" {
-  availability_zone_id = data.aws_availability_zones.available.zone_ids[0]
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.2.0/24"
-}
-
-resource "aws_network_interface" "reused" {
-  subnet_id = aws_subnet.astronautcount.id
-  description = "ENI to be reused in ASGed instances"
-  security_groups = [aws_security_group.astronautcount-ingress.id]
-}
-
 resource "aws_eip" "static" {
   vpc = true
-  network_interface = aws_network_interface.reused.id
 }
 
 resource "aws_security_group" "astronautcount-ingress" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.default.id
 
   # Public subnet allowing ingress on common ports.
   dynamic "ingress" {
