@@ -3,6 +3,10 @@ resource "aws_vpc" "main" {
   enable_dns_support = true
 }
 
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+}
+
 # Ensure the selected availability zones actually exist.
 data "aws_availability_zones" "available" {
   state = "available"
