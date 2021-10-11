@@ -3,8 +3,8 @@ data "template_file" "ssh" {
 
   vars = {
     ssh_public_key = var.ssh-public-key
-    region = var.region
-    public_ip = aws_eip.static.public_ip
+    region         = var.region
+    public_ip      = aws_eip.static.public_ip
   }
 }
 

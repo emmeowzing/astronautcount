@@ -16,12 +16,37 @@ data "aws_ami" "ubuntu" {
 
 data "aws_region" "region" {}
 
+resource "aws_iam_role" "astronautcount" {
+  description = "Allow instances to reassign EIPs to themselves"
+  inline_policy {
+    name   = "astronautcount eip"
+    policy = data.aws_iam_policy_document.inline_policy.json
+  }
+}
+
+data "aws_iam_policy_document" "inline_policy" {
+  version = "2012-10-17"
+  statement = {
+    actions   = ["ec2:*"]
+    effect    = "Allow"
+    resources = ["*"]
+
+    principals = {
+
+    }
+  }
+}
+
 resource "aws_launch_template" "astronautcount" {
   name                   = "astronautcount"
   image_id               = data.aws_ami.ubuntu.id
   instance_type          = var.instance-type
   user_data              = data.template_cloudinit_config.astronautcount.rendered
   vpc_security_group_ids = [aws_security_group.astronautcount-ingress.id]
+
+  iam_instance_profile {
+    arn = aws_iam_role.astronautcount.arn
+  }
 
   lifecycle {
     create_before_destroy = true
@@ -67,7 +92,7 @@ resource "aws_autoscaling_group" "astronautcount" {
   health_check_type         = "ELB"
   termination_policies      = ["NewestInstance"]
   max_instance_lifetime     = 31536000 # one year
-  availability_zones = toset([element(data.aws_availability_zones.available.names, 0)])
+  availability_zones        = toset([element(data.aws_availability_zones.available.names, 0)])
 
   mixed_instances_policy {
     launch_template {
