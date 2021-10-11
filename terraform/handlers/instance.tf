@@ -22,6 +22,7 @@ resource "aws_iam_instance_profile" "astronautcount" {
 }
 
 resource "aws_iam_role" "astronautcount" {
+  name        = "astronautcount"
   description = "Allow instances to reassign EIPs to themselves"
   inline_policy {
     name   = "astronautcount"
