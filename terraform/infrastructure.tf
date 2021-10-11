@@ -18,6 +18,8 @@ module "webhook_handler" {
 module "circleci_environment" {
   source = "./circleci/"
 
-  circleci-token = var.circleci-token
-  public-eip     = module.webhook_handler.public-eip
+  circleci-token        = var.circleci-token
+  public-eip            = module.webhook_handler.public-eip
+  circleci-project      = var.circleci-project
+  circleci-organization = var.circleci-organization
 }

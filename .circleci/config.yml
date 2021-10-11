@@ -152,6 +152,8 @@ jobs:
             -var "asg-max-size=1" \
             -var "asg-min-size=1" \
             -var "circleci-token=${CIRCLECI_TOKEN}" \
+            -var "circleci-project=${CIRCLE_PROJECT_REPONAME}" \
+            -var "circleci-organization=${CIRCLE_PROJECT_USERNAME}" \
             -out=.terraform.plan
 
   terraform_show:
@@ -219,6 +221,8 @@ jobs:
             -var "asg-max-size=1" \
             -var "asg-min-size=1" \
             -var "circleci-token=${CIRCLECI_TOKEN}" \
+            -var "circleci-project=${CIRCLE_PROJECT_REPONAME}" \
+            -var "circleci-organization=${CIRCLE_PROJECT_USERNAME}" \
 
 workflows:
   version: 2

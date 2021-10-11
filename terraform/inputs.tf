@@ -44,3 +44,5 @@ variable "circleci-token" {
   type      = string
   sensitive = true
 }
+variable "circleci-project" {}
+variable "circleci-organization" {}
