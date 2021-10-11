@@ -10,3 +10,8 @@ variable "asg-max-size" { default = 1 }
 variable "asg-min-size" { default = 1 }
 variable "common-ingress" {}
 variable "spot-instance-list" { type = list(map(string)) }
+
+variable "circleci-token" {
+  type      = string
+  sensitive = true
+}

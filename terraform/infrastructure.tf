@@ -14,3 +14,9 @@ module "webhook_handler" {
   common-ingress                = var.common-ingress
   spot-instance-list            = var.spot-instance-list
 }
+
+module "cirlceci_environment" {
+  source = "./circleci/"
+
+  circleci-token = var.circleci-token
+}
