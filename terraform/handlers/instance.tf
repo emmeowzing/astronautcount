@@ -19,7 +19,6 @@ data "aws_region" "region" {}
 resource "aws_launch_template" "astronautcount" {
   name                   = "astronautcount"
   image_id               = data.aws_ami.ubuntu.id
-  vpc_security_group_ids = [aws_security_group.astronautcount-ingress.id]
   instance_type          = var.instance-type
   user_data              = data.template_cloudinit_config.astronautcount.rendered
 
@@ -46,6 +45,7 @@ resource "aws_launch_template" "astronautcount" {
     delete_on_termination = false
     device_index = 0
     associate_public_ip_address = false
+    security_groups = [aws_security_group.astronautcount-ingress.id]
     network_interface_id = aws_network_interface.reused.id
   }
 }
