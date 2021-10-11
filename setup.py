@@ -23,6 +23,7 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
     python_requires='>=3.9, <4',
+    url = 'https://github.com/bjd2385/astronautbot',
     install_requires=[
         'requests>=2.26.0',
         'urllib3>=1.26.7',
