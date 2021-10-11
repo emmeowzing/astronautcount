@@ -46,6 +46,7 @@ resource "aws_launch_template" "astronautcount" {
     delete_on_termination = false
     device_index = 0
     associate_public_ip_address = false
+    subnet_id = aws_subnet.astronautcount.id
     network_interface_id = aws_network_interface.reused.id
   }
 }
