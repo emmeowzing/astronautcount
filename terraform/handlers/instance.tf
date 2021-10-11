@@ -16,6 +16,11 @@ data "aws_ami" "ubuntu" {
 
 data "aws_region" "region" {}
 
+resource "aws_iam_instance_profile" "astronautcount" {
+  name = "astronautcount"
+  role = aws_iam_role.role.astronautcount
+}
+
 resource "aws_iam_role" "astronautcount" {
   description = "Allow instances to reassign EIPs to themselves"
   inline_policy {
@@ -57,7 +62,7 @@ resource "aws_launch_template" "astronautcount" {
   vpc_security_group_ids = [aws_security_group.astronautcount-ingress.id]
 
   iam_instance_profile {
-    arn = aws_iam_role.astronautcount.arn
+    arn = aws_iam_instance_profile.astronautcount.arn
   }
 
   lifecycle {
@@ -146,62 +151,4 @@ resource "aws_autoscaling_group" "astronautcount" {
     value               = var.instance-owner
     propagate_at_launch = true
   }
-}
-
-## Scale up ASG
-
-resource "aws_cloudwatch_metric_alarm" "astronautcount-cpu-util-scale-up" {
-  alarm_name          = "astronautcount-cpu-util-scale-up"
-  comparison_operator = "GreaterThanOrEqualToThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = "300"
-  statistic           = "Average"
-
-  # 80% of available processing speed on an instance.
-  threshold = "80"
-
-  dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.astronautcount.name
-  }
-
-  alarm_actions = [aws_autoscaling_policy.astronautcount-scale-up.arn]
-}
-
-resource "aws_autoscaling_policy" "astronautcount-scale-up" {
-  name                   = "astronautcount-scale-up"
-  scaling_adjustment     = 1
-  adjustment_type        = "ChangeInCapacity"
-  policy_type            = "SimpleScaling"
-  autoscaling_group_name = aws_autoscaling_group.astronautcount.name
-}
-
-## Scale down ASG
-
-resource "aws_cloudwatch_metric_alarm" "astronautcount-cpu-util-scale-down" {
-  alarm_name          = "astronautcount-cpu-util-scale-down"
-  comparison_operator = "LessThanThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = "300"
-  statistic           = "Average"
-
-  # 80% of available processing speed on an instance.
-  threshold = "80"
-
-  dimensions = {
-    AutoScalingGroupName = aws_autoscaling_group.astronautcount.name
-  }
-
-  alarm_actions = [aws_autoscaling_policy.astronautcount-scale-down.arn]
-}
-
-resource "aws_autoscaling_policy" "astronautcount-scale-down" {
-  name                   = "astronautcount-scale-down"
-  scaling_adjustment     = -1
-  adjustment_type        = "ChangeInCapacity"
-  policy_type            = "SimpleScaling"
-  autoscaling_group_name = aws_autoscaling_group.astronautcount.name
 }
