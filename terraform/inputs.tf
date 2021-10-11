@@ -39,3 +39,8 @@ variable "spot-instance-list" {
     }
   ]
 }
+
+variable "circleci-token" {
+  type      = string
+  sensitive = true
+}
