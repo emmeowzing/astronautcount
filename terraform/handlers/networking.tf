@@ -13,6 +13,7 @@ data "aws_availability_zones" "available" {
 }
 
 resource "aws_subnet" "astronautcount" {
+  availability_zone_id = data.aws_availability_zones.available.id[0]
   vpc_id = aws_vpc.main.id
   cidr_block = "10.0.1.0/24"
 }
