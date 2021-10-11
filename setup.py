@@ -3,6 +3,7 @@
 import pathlib
 
 from setuptools import setup, find_packages
+from src import bot
 
 
 here = pathlib.Path(__file__).parent.resolve()
@@ -12,8 +13,8 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='astronautcount',
-    version='0.1.0',
-    description='An astronaut count bot that posts daily to Twitter',
+    version=bot.__version__,
+    description=bot.__doc__,
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Brandon Doyle',
