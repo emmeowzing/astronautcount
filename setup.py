@@ -3,7 +3,7 @@
 import pathlib
 
 from setuptools import setup, find_packages
-from src import bot
+
 
 here = pathlib.Path(__file__).parent.resolve()
 
@@ -11,9 +11,9 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
-    name='astronautbot',
-    version=bot.__version__,
-    description=bot.__doc__,
+    name='astronautcount',
+    version='0.1.0',
+    description='An astronaut count bot that posts daily to Twitter',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Brandon Doyle',
@@ -25,7 +25,8 @@ setup(
     install_requires=[
         'requests>=2.26.0',
         'urllib3>=1.26.7',
-        'tweepy>=4.1.0'
+        'tweepy>=4.1.0',
+        'Flask>=2.0.2'
     ],
     entry_points={
         'console_scripts': [

@@ -1,4 +1,4 @@
--e git+ssh://git@github.com/bjd2385/astronautbot.git@67e2283aab5b50c699c4d7d5f62ccb1e25f1a027#egg=astronautbot
+-e git+ssh://git@github.com/bjd2385/astronautbot.git@e811ffa6add15d3715660edc22e3bcb5b1467e30#egg=astronautbot
 backports.entry-points-selectable==1.1.0
 build==0.7.0
 certifi==2021.5.30
