@@ -12,7 +12,7 @@ resource "aws_eip" "static" {
 }
 
 resource "aws_security_group" "astronautcount-ingress" {
-  vpc_id = aws_vpc.default.id
+  vpc_id = data.aws_vpc.default.id
 
   # Public subnet allowing ingress on common ports.
   dynamic "ingress" {
