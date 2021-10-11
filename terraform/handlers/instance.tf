@@ -20,26 +20,26 @@ resource "aws_iam_role" "astronautcount" {
   description = "Allow instances to reassign EIPs to themselves"
   inline_policy {
     name   = "astronautcount eip"
-    policy = data.aws_iam_policy_document.inline_policy.json
+    policy = data.aws_iam_policy_document.ec2.json
   }
 
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
-data "aws_iam_policy_document" "assume_role_policy" {
+data "aws_iam_policy_document" "assume_role" {
   version = "2012-10-17"
 
   statement {
     actions = ["sts:AssumeRole"]
-
+    effect  = "Allow"
     principals {
       type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+      identifiers = "ec2.amazonaws.com"
     }
   }
 }
 
-data "aws_iam_policy_document" "inline_policy" {
+data "aws_iam_policy_document" "ec2" {
   version = "2012-10-17"
 
   statement {
