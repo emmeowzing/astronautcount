@@ -19,7 +19,7 @@ data "aws_region" "region" {}
 resource "aws_iam_role" "astronautcount" {
   description = "Allow instances to reassign EIPs to themselves"
   inline_policy {
-    name   = "astronautcount eip"
+    name   = "astronautcount"
     policy = data.aws_iam_policy_document.ec2.json
   }
 
