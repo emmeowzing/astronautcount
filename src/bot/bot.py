@@ -116,7 +116,7 @@ def tweet() -> None:
         grouped_astronauts = parse_astronauts(astronauts['people'])
         tweet = f'There are {number_of_astronauts} people in space'
 
-        # TODO: logically cut string until we're below the character threshold for better tweet content.
+        # TODO: logically cut string until we're below the character threshold for fuller tweets.
         if len(tweet) + len(f', including {grouped_astronauts}') <= TWITTER_CHARACTER_LIMIT:
             tweet += f', including {grouped_astronauts}'
 
