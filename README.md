@@ -1,4 +1,4 @@
-Astronaut Twitter Bot
+Astronaut Twitter Bot <img src="img/woman-astronaut-emoji.png" alt="drawing" width="25"/>
 ---------------------
 
 This is the repository for [@astronautcount](https://twitter.com/astronautcount), the astronaut count twitter bot.
