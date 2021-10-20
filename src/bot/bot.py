@@ -93,7 +93,7 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
         if i == last_i:
             grouped_astronauts_string += f' on the {ship}'
         else:
-            grouped_astronauts_string += f' on the {ship}, '
+            grouped_astronauts_string += f' on the {ship}, as well as '
 
 
     print(grouped_astronauts_string)
