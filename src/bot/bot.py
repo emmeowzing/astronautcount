@@ -76,7 +76,7 @@ class BoundIter(Iterator):
             raise StopIteration
         else:
             el: Any = self.obj[self._index]
-            yield self._index == 0, el, self._last_index == self._last_index
+            yield (self._index == 0, el, self._last_index == self._last_index)
             self._index += 1
 
 
