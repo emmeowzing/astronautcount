@@ -57,29 +57,6 @@ def englishified_list(items: List[str]) -> str:
     return formatted_string
 
 
-class BoundIter(Iterator):
-    """
-    An iterator that will indicate when an element is the first and last. There are probably a great many improvements that
-    could be made to this class.
-    """
-    def __init__(self, obj: List[str]) -> None:
-        self.obj = obj
-        self._obj_len = len(obj)
-        self._last_index = self._obj_len - 1
-
-    def __iter__(self) -> 'BoundIter':
-        self._index = 0
-        return self
-
-    def __next__(self) -> Generator[Tuple[bool, Any, bool], None, None]:
-        if self._index == self._obj_len:
-            raise StopIteration
-        else:
-            el: Any = self.obj[self._index]
-            yield (self._index == 0, el, self._last_index == self._last_index)
-            self._index += 1
-
-
 def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
     """
     Parse a list of astronauts and return a list of names grouped by craft they reside on.
@@ -107,16 +84,16 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
                 transposed_astronaut_list[ship].append(person['name'])
 
     grouped_astronauts_string = ''
-    for ship in transposed_astronaut_list:
-        for first, name, last in BoundIter(transposed_astronaut_list[ship]):
-            if first:
-                grouped_astronauts_string += f', including '
-            transposed_astronaut_list[ship].sort()
-            grouped_astronauts_string += englishified_list(transposed_astronaut_list[ship])
-            if last:
-                grouped_astronauts_string += f' on the {ship}'
-            else:
-                grouped_astronauts_string += f' on the {ship}, '
+    last_i = len(transposed_astronaut_list) - 1
+    for i, ship in enumerate(transposed_astronaut_list[ship]):
+        if i == 0:
+            grouped_astronauts_string += f', including '
+        transposed_astronaut_list[ship].sort()
+        grouped_astronauts_string += englishified_list(transposed_astronaut_list[ship])
+        if i == last_i:
+            grouped_astronauts_string += f' on the {ship}'
+        else:
+            grouped_astronauts_string += f' on the {ship}, '
 
 
     print(grouped_astronauts_string)
