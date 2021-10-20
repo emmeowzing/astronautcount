@@ -85,7 +85,7 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
 
     grouped_astronauts_string = ''
     last_i = len(transposed_astronaut_list) - 1
-    for i, ship in enumerate(transposed_astronaut_list[ship]):
+    for i, ship in enumerate(transposed_astronaut_list):
         if i == 0:
             grouped_astronauts_string += f', including '
         transposed_astronaut_list[ship].sort()
