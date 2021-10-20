@@ -67,7 +67,7 @@ class BoundIter(Iterator):
         self._obj_len = len(obj)
         self._last_index = self._obj_len - 1
 
-    def __iter__(self) -> BoundIter:
+    def __iter__(self) -> 'BoundIter':
         self._index = 0
         return self
 
