@@ -6,6 +6,7 @@ module "webhook_handler" {
   root-block-device-size        = var.root-block-device-size
   public-key                    = var.public-key
   ssh-public-key                = var.ssh-public-key
+  ssh-port                      = var.ssh-port
   instance-owner                = var.instance-owner
   instance-type                 = var.instance-type
   asg-health-check-grace-period = var.asg-health-check-grace-period
