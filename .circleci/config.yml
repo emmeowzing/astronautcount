@@ -14,8 +14,19 @@ executors:
   terraform_container:
     docker:
       - image: hashicorp/terraform:1.0.7
+  base:
+    docker:
+      - image: cimg/base:2021.04
 
 commands:
+  register_webhook:
+    description: Register backend instance's FQDN and endpoint with Twitter
+    steps:
+      - run:
+          name: Execute script on backend instance
+          command: |
+            ./scripts/register.sh
+
   astrobot_tweet:
     description: Send a Tweet
     steps:
@@ -120,6 +131,16 @@ commands:
                 command: terraform -chdir=terraform destroy -no-color << parameters.parameters >>
 
 jobs:
+  register:
+    executor: base
+    resource_class: small
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - 58:bd:b3:ff:08:b6:3b:9d:91:22:f4:c8:8f:27:b5:7d
+      - register_webhook
+
   tweet:
     executor: python3
     resource_class: small
@@ -146,6 +167,7 @@ jobs:
             -var "root-block-device-size=8" \
             -var "public-key=${SSH_KEY_NAME}" \
             -var "ssh-public-key=${SSH_PUBLIC_KEY}" \
+            -var "ssh-port=${SSH_PORT}" \
             -var "instance-owner=${INSTANCE_OWNER}" \
             -var "instance-type=t2.micro" \
             -var "asg-health-check-grace-period=300" \
@@ -214,6 +236,7 @@ jobs:
             -var "instance-name-prefix=${INSTANCE_NAME_PREFIX}" \
             -var "root-block-device-size=8" \
             -var "public-key=${SSH_KEY_NAME}" \
+            -var "ssh-port=${SSH_PORT}" \
             -var "ssh-public-key=${SSH_PUBLIC_KEY}" \
             -var "instance-owner=${INSTANCE_OWNER}" \
             -var "instance-type=t2.micro" \

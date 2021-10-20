@@ -5,6 +5,7 @@ data "template_file" "ssh" {
     ssh_public_key = var.ssh-public-key
     region         = var.region
     public_ip      = aws_eip.static.public_ip
+    ssh_port       = var.ssh-port
   }
 }
 

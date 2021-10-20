@@ -2,11 +2,13 @@
 A Twitter bot that posts the number of astronauts in space every day.
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Generator, Tuple, Iterable
 
 import tweepy
 import os
 import requests
+
+from collections.abc import Iterator
 
 
 TWITTER_CHARACTER_LIMIT = 280
@@ -55,6 +57,29 @@ def englishified_list(items: List[str]) -> str:
     return formatted_string
 
 
+class BoundIter(Iterator):
+    """
+    An iterator that will indicate when an element is the first and last. There are probably a great many improvements that
+    could be made to this class.
+    """
+    def __init__(self, obj: List[str]) -> None:
+        self.obj = obj
+        self._obj_len = len(obj)
+        self._last_index = self._obj_len - 1
+
+    def __iter__(self) -> BoundIter:
+        self._index = 0
+        return self
+
+    def __next__(self) -> Generator[Tuple[bool, Any, bool], None, None]:
+        if self._index == self._obj_len:
+            raise StopIteration
+        else:
+            el: Any = self.obj[self._index]
+            yield self._index == 0, el, self._last_index == self._last_index
+            self._index += 1
+
+
 def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
     """
     Parse a list of astronauts and return a list of names grouped by craft they reside on.
@@ -83,9 +108,16 @@ def parse_astronauts(astronaut_list: List[Dict[str, str]]) -> str:
 
     grouped_astronauts_string = ''
     for ship in transposed_astronaut_list:
-        transposed_astronaut_list[ship].sort()
-        grouped_astronauts_string += englishified_list(transposed_astronaut_list[ship])
-        grouped_astronauts_string += f' on the {ship}'
+        for first, name, last in BoundIter(transposed_astronaut_list[ship]):
+            if first:
+                grouped_astronauts_string += f', including '
+            transposed_astronaut_list[ship].sort()
+            grouped_astronauts_string += englishified_list(transposed_astronaut_list[ship])
+            if last:
+                grouped_astronauts_string += f' on the {ship}'
+            else:
+                grouped_astronauts_string += f' on the {ship}, '
+
 
     print(grouped_astronauts_string)
 
@@ -117,8 +149,8 @@ def tweet() -> None:
         tweet = f'There are {number_of_astronauts} people in space'
 
         # TODO: logically cut string until we're below the character threshold for fuller tweets.
-        if len(tweet) + len(f', including {grouped_astronauts}') <= TWITTER_CHARACTER_LIMIT:
-            tweet += f', including {grouped_astronauts}'
+        if len(tweet) + len(grouped_astronauts) <= TWITTER_CHARACTER_LIMIT:
+            tweet += grouped_astronauts
 
     print(tweet)
     try:

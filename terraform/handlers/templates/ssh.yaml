@@ -12,11 +12,12 @@ users:
 
 packages:
   - unzip
+  - curl
 
 write_files:
   - path: /etc/ssh/sshd_config
     content: |
-      Port 3301
+      Port ${ssh_port}
       ListenAddress 0.0.0.0
       ListenAddress ::
       LogLevel ERROR
@@ -43,3 +44,7 @@ runcmd:
   - './aws/install'
   # Associate allocated EIP with this instance.
   - 'aws ec2 --region ${region} associate-address --public-ip ${public_ip} --instance-id "$(curl http://169.254.169.254/latest/meta-data/instance-id)"'
+  # Install nvm and node
+  - 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+  - 'nvm install 16'
+  - 'nvm use 16'
