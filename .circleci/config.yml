@@ -264,20 +264,23 @@ workflows:
           name: terraform-validate
           context:
             - production
-
       - terraform_plan:
           name: terraform-plan
           context:
             - production
           requires:
             - terraform-validate
-
       - terraform_apply:
           name: terraform-apply
           context:
             - production
           requires:
             - terraform-plan
+      
+      - register:
+          name: Twitter webhook registration
+          requires:
+            - terraform_apply
 
   daily:
     triggers:
