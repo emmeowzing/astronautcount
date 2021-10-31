@@ -12,6 +12,10 @@ Project structure consists of
   - `handler`, the Flask app already mentioned, and
   - `bot`, a Python-based bot that CircleCI executes every day for a daily morning tweet.
 
+### Where does the data come from?
+
+At-current, this bot pulls data from [Open Notify's API](http://open-notify.org/Open-Notify-API/People-In-Space/), which is maintained by Nathan Bergey ([@natronics](https://twitter.com/natronics)).
+
 ### Development
 
 Don't forget to increment `src/bot/__init__.__version__` for new releases!
