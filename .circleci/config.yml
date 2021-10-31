@@ -25,7 +25,7 @@ commands:
       - run:
           name: Execute script on backend instance
           command: |
-            ./scripts/register.sh
+            sudo ./scripts/register.sh
 
   astrobot_tweet:
     description: Send a Tweet
