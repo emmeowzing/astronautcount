@@ -25,7 +25,7 @@ commands:
       - run:
           name: Install npm and twitter-autohook
           command: |
-            apt-get install -y npm
+            sudo apt-get install -y npm
             npm i twitter-autohook
       - run:
           name: Register node
