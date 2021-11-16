@@ -45,6 +45,6 @@ runcmd:
   # Associate allocated EIP with this instance.
   - 'aws ec2 --region ${region} associate-address --public-ip ${public_ip} --instance-id "$(curl http://169.254.169.254/latest/meta-data/instance-id)"'
   # Install nvm and node
-  - 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo -H -u astronaut bash -i'
+  - 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo -H -u astronaut bash'
   - 'sudo -H -u astronaut bash -i -c "nvm install 16; nvm use 16; npm i twitter-autohook""'
   - 'ln -s /home/astronaut/node_modules/.bin/autohook /usr/local/bin/autohook'
