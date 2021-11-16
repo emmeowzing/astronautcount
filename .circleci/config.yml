@@ -285,6 +285,10 @@ workflows:
             - production
           requires:
             - terraform-plan
+      - register:
+          name: Twitter webhook registration
+          requires:
+            - terraform-apply
 
   daily:
     triggers:
