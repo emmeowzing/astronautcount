@@ -19,15 +19,6 @@ executors:
       - image: cimg/base:2021.04
 
 commands:
-  register_webhook:
-    description: Register backend instance's FQDN and endpoint with Twitter
-    steps:
-      - run:
-          name: Execute script on backend instance
-          command: |
-            chmod +x scripts/register.sh
-            ./scripts/register.sh
-
   astrobot_tweet:
     description: Send a Tweet
     steps:
@@ -132,15 +123,6 @@ commands:
                 command: terraform -chdir=terraform destroy -no-color << parameters.parameters >>
 
 jobs:
-  register:
-    executor: base
-    resource_class: small
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - 58:bd:b3:ff:08:b6:3b:9d:91:22:f4:c8:8f:27:b5:7d
-      - register_webhook
 
   tweet:
     executor: python3
@@ -277,11 +259,6 @@ workflows:
             - production
           requires:
             - terraform-plan
-
-      - register:
-          name: Twitter webhook registration
-          requires:
-            - terraform-apply
 
   daily:
     triggers:

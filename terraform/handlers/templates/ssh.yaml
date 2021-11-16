@@ -47,3 +47,4 @@ runcmd:
   # Install nvm and node
   - 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | sudo -H -u astronaut bash -i'
   - 'sudo -H -u astronaut bash -i -c "nvm install 16; nvm use 16"'
+  - 'sudo -H -u astronaut bash -i -c "npm i twitter-autohook"'
