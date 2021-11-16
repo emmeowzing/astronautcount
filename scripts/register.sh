@@ -6,4 +6,4 @@
 ssh -p "$SSH_PORT" \
     -o UserKnownHostsFile=/dev/null \
     -o StrictHostKeyChecking=no astronaut@"$PUBLIC_EIP" \
-    npm i -S twitter-autohooks
+    npm i -S twitter-autohook
