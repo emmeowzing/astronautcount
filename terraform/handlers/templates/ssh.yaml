@@ -41,10 +41,10 @@ runcmd:
   - 'systemctl restart sshd.service'
   # Install the latest AWS CLI.
   - 'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"'
-  - 'unzip awscliv2.zip'
+  - 'unzip -q awscliv2.zip'
   - './aws/install'
   # Associate allocated EIP with this instance.
   - 'aws ec2 --region ${region} associate-address --public-ip ${public_ip} --instance-id "$(curl http://169.254.169.254/latest/meta-data/instance-id)"'
   # Install twitter-autohook cli
   - 'npm i twitter-autohook'
-  - 'ln -s /home/astronaut/node_modules/.bin/autohook /usr/local/bin/autohook'
+  - 'ln -s /node_modules/.bin/autohook /usr/local/bin/autohook'
