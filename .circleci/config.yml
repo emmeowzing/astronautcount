@@ -19,6 +19,26 @@ executors:
       - image: cimg/base:2021.04
 
 commands:
+  twitter-autohook:
+    description: Register IP address
+    steps:
+      - run:
+          name: Install npm and twitter-autohook
+          command: |
+            apk add npm
+            npm i twitter-autohook
+      - run:
+          name: Register node
+          command: |
+            # https://www.npmjs.com/package/twitter-autohook#cli
+            ln -s $HOME/node_modules/.bin/autohook /usr/local/bin/autohook
+            autohook \
+              --token $TWITTER_ACCESS_TOKEN \
+              --secret $TWITTER_ACCESS_TOKEN_SECRET \
+              --consumer-key $TWITTER_CONSUMER_KEY \
+              --consumer-secret $TWITTER_CONSUMER_SECRET \
+              --env $TWITTER_WEBHOOK_ENV
+
   astrobot_tweet:
     description: Send a Tweet
     steps:
