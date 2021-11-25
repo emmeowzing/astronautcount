@@ -16,7 +16,7 @@ const { URL } = require('url');
 
       const webhook = new autohook.Autohook(config);
       await webhook.removeWebhooks();
-      await webhook.start(webhookURL);
+      await webhook.start(webhookURL.toString());
       await webhook.subscribe({
         oauth_token: config.token,
         oauth_token_secret: config.token_secret
