@@ -28,5 +28,6 @@ module "circleci_environment" {
 module "https_certificate" {
   source = "./acm/"
 
-  fqdn = module.webhook_handler.public-fqdn
+  region = var.region
+  fqdn   = module.webhook_handler.public-fqdn
 }
