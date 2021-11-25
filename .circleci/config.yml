@@ -17,16 +17,17 @@ executors:
   base:
     docker:
       - image: cimg/base:2021.04
+  node:
+    docker:
+      - image: node:16
 
 commands:
   twitter-autohook:
-    description: Register IP address
+    description: Register PUBLIC_EIP address
     steps:
       - run:
-          name: Install npm and twitter-autohook
-          command: |
-            sudo apt update && sudo apt-get install -y npm
-            npm i twitter-autohook
+          name: Install twitter-autohook
+          command: npm i -g twitter-autohook
       - run:
           name: Register node
           command: |
@@ -49,8 +50,7 @@ commands:
             python setup.py install
       - run:
           name: Execute astrobot
-          command: |
-            astrobot
+          command: astrobot
 
   terraform_exec:
     parameters:
@@ -107,8 +107,7 @@ commands:
             # Run the selected terraform command, respecting available flags on validate option.
             - run:
                 name: Terraform << parameters.command >>
-                command: |
-                  terraform -chdir=terraform << parameters.command >> -no-color << parameters.parameters >>
+                command: terraform -chdir=terraform << parameters.command >> -no-color << parameters.parameters >>
 
             # Save terraform plan following terraform_plan job run.
             - when:
