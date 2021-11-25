@@ -26,18 +26,20 @@ commands:
     description: Register PUBLIC_EIP address
     steps:
       - run:
-          name: Install twitter-autohook
-          command: npm i -g twitter-autohook
+          name: Install dependencies
+          command: npm i
       - run:
           name: Register node
           command: |
             # https://www.npmjs.com/package/twitter-autohook#cli
-            autohook \
-              --token $TWITTER_ACCESS_TOKEN \
-              --secret $TWITTER_ACCESS_TOKEN_SECRET \
-              --consumer-key $TWITTER_CONSUMER_KEY \
-              --consumer-secret $TWITTER_CONSUMER_SECRET \
-              --env $TWITTER_WEBHOOK_ENV
+            #autohook \
+            #  --reset \
+            #  --token $TWITTER_ACCESS_TOKEN \
+            #  --secret $TWITTER_ACCESS_TOKEN_SECRET \
+            #  --consumer-key $TWITTER_CONSUMER_KEY \
+            #  --consumer-secret $TWITTER_CONSUMER_SECRET \
+            #  --env $TWITTER_WEBHOOK_ENV
+            node scripts/autohook.js
 
   astrobot_tweet:
     description: Send a Tweet

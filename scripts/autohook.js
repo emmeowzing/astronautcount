@@ -5,7 +5,7 @@ const { URL } = require('url');
 const ip = http.ClientRequest().
 
 // https://github.com/twitterdev/autohook/blob/master/examples/standalone-server.js#L53
-(async () => {
+_ = (async () => {
     try {
       const webhookURL = new URL(process.env.PUBLIC_EIP);
 
