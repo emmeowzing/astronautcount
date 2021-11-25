@@ -240,20 +240,7 @@ jobs:
           parameters: |
             -auto-approve \
             -input=false \
-            -var "region=<< parameters.region >>" \
-            -var "instance-name-prefix=${INSTANCE_NAME_PREFIX}" \
-            -var "root-block-device-size=8" \
-            -var "public-key=${SSH_KEY_NAME}" \
-            -var "ssh-port=${SSH_PORT}" \
-            -var "ssh-public-key=${SSH_PUBLIC_KEY}" \
-            -var "instance-owner=${INSTANCE_OWNER}" \
-            -var "instance-type=t2.micro" \
-            -var "asg-health-check-grace-period=300" \
-            -var "asg-max-size=1" \
-            -var "asg-min-size=1" \
-            -var "circleci-token=${CIRCLECI_TOKEN}" \
-            -var "circleci-project=${CIRCLE_PROJECT_REPONAME}" \
-            -var "circleci-organization=${CIRCLE_PROJECT_USERNAME}" \
+            .terraform.plan
 
 workflows:
   version: 2
