@@ -32,7 +32,7 @@ commands:
           name: Register node
           command: |
             # https://www.npmjs.com/package/twitter-autohook#cli
-            sudo ln -s $(pwd)/node_modules/.bin/autohook /usr/local/bin/autohook
+            ln -s $(pwd)/node_modules/.bin/autohook /usr/local/bin/autohook
             autohook \
               --token $TWITTER_ACCESS_TOKEN \
               --secret $TWITTER_ACCESS_TOKEN_SECRET \
