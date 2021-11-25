@@ -1,11 +1,10 @@
 const Autohook = require('twitter-autohook');
-const http = require('http');
 const { URL } = require('url');
 
 // https://github.com/twitterdev/autohook/blob/master/examples/standalone-server.js#L53
 (async () => {
     try {
-      const webhookURL = new URL(process.env.PUBLIC_EIP);
+      const webhookURL = new URL('https://' + process.env.PUBLIC_EIP);
 
       const config = {
         token: process.env.TWITTER_ACCESS_TOKEN,
