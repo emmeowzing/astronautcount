@@ -1,4 +1,4 @@
-const Autohook = require('twitter-autohook');
+const autohook = require('twitter-autohook');
 const { URL } = require('url');
 
 // https://github.com/twitterdev/autohook/blob/master/examples/standalone-server.js#L53
@@ -14,7 +14,7 @@ const { URL } = require('url');
         env: process.env.TWITTER_WEBHOOK_ENV,
       };
 
-      const webhook = new Autohook(config);
+      const webhook = new autohook.Autohook(config);
       await webhook.removeWebhooks();
       await webhook.start(webhookURL);
       await webhook.subscribe({
