@@ -24,3 +24,9 @@ module "circleci_environment" {
   circleci-project      = var.circleci-project
   circleci-organization = var.circleci-organization
 }
+
+module "https_certificate" {
+  source = "./acm/"
+
+  fqdn = module.webhook_handler.public-fqdn
+}
