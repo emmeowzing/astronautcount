@@ -43,7 +43,7 @@ module "godaddy_domain_forwarding" {
     {
       "name" : "twitter"
       "type" : "A"
-      "data" : module.webhook_handler.public-ip
+      "data" : module.webhook_handler.public-eip
     }
   ]
 }
