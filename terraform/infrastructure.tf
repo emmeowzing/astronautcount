@@ -39,9 +39,11 @@ module "godaddy_domain_forwarding" {
   godaddy_secret = var.godaddy_secret
 
   domain = "aperiodicity.com"
-  records = {
-    "name" : "twitter"
-    "type" : "A"
-    "data" : module.webhook_handler.public-fqdn
-  }
+  records = [
+    {
+      "name" : "twitter"
+      "type" : "A"
+      "data" : module.webhook_handler.public-fqdn
+    }
+  ]
 }
