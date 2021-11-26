@@ -131,8 +131,7 @@ commands:
       # Terraform destroy will only ever be ran against development, never prod.
       - when:
           condition:
-            and:
-              - equal: [destroy, << parameters.command >>]
+            equal: [destroy, << parameters.command >>]
           steps:
             # Restore most recent init and plan caches.
             - restore_cache:
