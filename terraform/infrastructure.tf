@@ -35,8 +35,8 @@ module "https_certificate" {
 module "godaddy_domain_forwarding" {
   source = "./godaddy/"
 
-  godaddy_key    = var.godaddy_key
-  godaddy_secret = var.godaddy_secret
+  godaddy-key    = var.godaddy-key
+  godaddy-secret = var.godaddy-secret
 
   domain = "aperiodicity.com"
   records = [

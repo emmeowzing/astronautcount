@@ -54,12 +54,12 @@ variable "circleci-organization" {}
 
 # Godaddy
 
-variable "godaddy_key" {
+variable "godaddy-key" {
   type      = string
   sensitive = true
 }
 
-variable "godaddy_secret" {
+variable "godaddy-secret" {
   type      = string
   sensitive = true
 }

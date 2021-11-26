@@ -8,6 +8,6 @@ terraform {
 }
 
 provider "godaddy" {
-  key    = var.godaddy_key
-  secret = var.godaddy_secret
+  key    = var.godaddy-key
+  secret = var.godaddy-secret
 }
