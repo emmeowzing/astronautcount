@@ -2,13 +2,11 @@
 A Twitter bot that posts the number of astronauts in space every day.
 """
 
-from typing import Dict, Any, List, Generator, Tuple, Iterable
+from typing import Dict, Any, List
 
 import tweepy
 import os
 import requests
-
-from collections.abc import Iterator
 
 
 TWITTER_CHARACTER_LIMIT = 280

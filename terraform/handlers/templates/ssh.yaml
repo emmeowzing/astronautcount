@@ -13,6 +13,7 @@ users:
 packages:
   - unzip
   - curl
+  - python3-pip
 
 write_files:
   - path: /etc/ssh/sshd_config
