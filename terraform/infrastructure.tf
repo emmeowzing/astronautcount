@@ -29,7 +29,7 @@ module "https_certificate" {
   source = "./acm/"
 
   region = var.region
-  fqdn   = "twitter.aperiodicity.com"
+  fqdn   = "twitter.${var.domain}"
 }
 
 module "godaddy_domain_forwarding" {
@@ -38,7 +38,7 @@ module "godaddy_domain_forwarding" {
   godaddy-key    = var.godaddy-key
   godaddy-secret = var.godaddy-secret
 
-  domain = "aperiodicity.com"
+  domain = var.domain
   records = [
     {
       "name" : "twitter"

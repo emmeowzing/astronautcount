@@ -187,6 +187,7 @@ jobs:
             -var "circleci-organization=${CIRCLE_PROJECT_USERNAME}" \
             -var "godaddy-key=${GODADDY_API_KEY}" \
             -var "godaddy-secret=${GODADDY_API_SECRET}" \
+            -var "domain=${DOMAIN}" \
             -out=.terraform.plan
 
   terraform_show:
