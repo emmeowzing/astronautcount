@@ -260,16 +260,19 @@ workflows:
           name: terraform-validate
           context:
             - production
+            - godaddy
       - terraform_plan:
           name: terraform-plan
           context:
             - production
+            - godaddy
           requires:
             - terraform-validate
       - terraform_apply:
           name: terraform-apply
           context:
             - production
+            - godaddy
           requires:
             - terraform-plan
       - register:

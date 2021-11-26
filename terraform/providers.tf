@@ -9,5 +9,10 @@ terraform {
       source  = "mrolla/circleci"
       version = "0.5.1"
     }
+
+    godaddy = {
+      source  = "n3integration/godaddy"
+      version = "1.8.7"
+    }
   }
 }

@@ -29,5 +29,19 @@ module "https_certificate" {
   source = "./acm/"
 
   region = var.region
-  fqdn   = module.webhook_handler.public-fqdn
+  fqdn   = "twitter.aperiodicity.com"
+}
+
+module "godaddy_domain_forwarding" {
+  source = "./godaddy/"
+
+  godaddy_key    = var.godaddy_key
+  godaddy_secret = var.godaddy_secret
+
+  domain = "aperiodicity.com"
+  records = {
+    "name" : "twitter"
+    "type" : "A"
+    "data" : module.webhook_handler.public-fqdn
+  }
 }

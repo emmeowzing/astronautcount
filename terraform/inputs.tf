@@ -1,3 +1,5 @@
+# AWS
+
 variable "region" { default = "us-east-2" }
 variable "instance-name-prefix" { default = "" }
 variable "root-block-device-size" { default = 8 }
@@ -41,9 +43,25 @@ variable "spot-instance-list" {
   ]
 }
 
+# CircleCI
+
 variable "circleci-token" {
   type      = string
   sensitive = true
 }
 variable "circleci-project" {}
 variable "circleci-organization" {}
+
+# Godaddy
+
+variable "godaddy_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "godaddy_secret" {
+  type      = string
+  sensitive = true
+}
+
+variable "domain" { type = string }
