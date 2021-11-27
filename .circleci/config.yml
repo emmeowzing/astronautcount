@@ -2,14 +2,45 @@ version: 2.1
 
 orbs: {}
 
-parameters: {}
+parameters:
+  default_region:
+    type: string
+    default: us-east-2
 
 executors:
   python3:
     docker:
       - image: python:3.9
+  terraform_container:
+    docker:
+      - image: hashicorp/terraform:1.0.7
+  base:
+    docker:
+      - image: cimg/base:2021.04
+  node:
+    docker:
+      - image: node:16
 
 commands:
+  twitter-autohook:
+    description: Register PUBLIC_EIP address
+    steps:
+      - run:
+          name: Install dependencies
+          command: npm i
+      - run:
+          name: Register node
+          command: |
+            # https://www.npmjs.com/package/twitter-autohook#cli
+            #autohook \
+            #  --reset \
+            #  --token $TWITTER_ACCESS_TOKEN \
+            #  --secret $TWITTER_ACCESS_TOKEN_SECRET \
+            #  --consumer-key $TWITTER_CONSUMER_KEY \
+            #  --consumer-secret $TWITTER_CONSUMER_SECRET \
+            #  --env $TWITTER_WEBHOOK_ENV
+            node scripts/autohook.js
+
   astrobot_tweet:
     description: Send a Tweet
     steps:
@@ -20,16 +51,199 @@ commands:
             python setup.py install
       - run:
           name: Execute astrobot
-          command: |
-            astrobot
+          command: astrobot
+
+  terraform_exec:
+    parameters:
+      command:
+        type: enum
+        enum:
+          - plan
+          - validate
+          - apply
+          - show
+          - destroy
+      parameters:
+        type: string
+        default: ''
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+    steps:
+      - run:
+          name: Add packages
+          command: apk add git openssl
+
+      - when:
+          condition:
+            not:
+              equal: [destroy, << parameters.command >>]
+          steps:
+            # Restore a former terraform init.
+            - restore_cache:
+                name: Restoring Cache [terraform init]
+                key: tfinit-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+
+            # Restore a former terraform plan.
+            - when:
+                condition:
+                  not:
+                    equal: [plan, << parameters.command >>]
+                steps:
+                  - restore_cache:
+                      name: Restoring Cache [terraform plan]
+                      key: tfplan-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+            - run:
+                name: Initializing Terraform
+                command: |
+                  cd ~/project/terraform
+                  terraform init -input=false \
+                      -no-color \
+                      -backend-config="key=state/terraform-<< parameters.region >>.tfstate" \
+                      -backend-config="region=us-east-2" \
+                      -backend-config="bucket=astronautcount-terraform-state" \
+                      -backend-config="access_key=${AWS_ACCESS_KEY_ID}" \
+                      -backend-config="secret_key=${AWS_SECRET_ACCESS_KEY}"
+
+            # Run the selected terraform command, respecting available flags on validate option.
+            - run:
+                name: Terraform << parameters.command >>
+                command: terraform -chdir=terraform << parameters.command >> -no-color << parameters.parameters >>
+
+            # Save terraform plan following terraform_plan job run.
+            - when:
+                condition:
+                  equal: [plan, << parameters.command >>]
+                steps:
+                  - save_cache:
+                      name: Saving Cache [terraform plan]
+                      key: tfplan-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+                      paths:
+                        - ~/project/terraform/.terraform.plan
+
+            # Save terraform init.
+            - save_cache:
+                name: Saving Cache [terraform init]
+                key: tfinit-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+                paths:
+                  - ~/project/terraform/.terraform/
+
+      # Terraform destroy will only ever be ran against development, never prod.
+      - when:
+          condition:
+            equal: [destroy, << parameters.command >>]
+          steps:
+            # Restore most recent init and plan caches.
+            - restore_cache:
+                name: Restoring Cache [terraform init]
+                key: tfinit-<< parameters.region >>-{{ .Environment.CIRCLE_WORKFLOW_ID }}
+            - run:
+                name: Terraform << parameters.command >>
+                command: terraform -chdir=terraform destroy -no-color << parameters.parameters >>
 
 jobs:
+  register:
+    executor: node
+    resource_class: small
+    steps:
+      - checkout
+      - twitter-autohook
+
   tweet:
     executor: python3
     resource_class: small
     steps:
       - checkout
       - astrobot_tweet
+
+  terraform_plan:
+    executor: terraform_container
+    parameters:
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+    resource_class: small
+    steps:
+      - checkout
+      - terraform_exec:
+          command: plan
+          region: << parameters.region >>
+          parameters: |
+            -input=false \
+            -var "region=<< parameters.region >>" \
+            -var "instance-name-prefix=${INSTANCE_NAME_PREFIX}" \
+            -var "root-block-device-size=8" \
+            -var "public-key=${SSH_KEY_NAME}" \
+            -var "ssh-public-key=${SSH_PUBLIC_KEY}" \
+            -var "ssh-port=${SSH_PORT}" \
+            -var "instance-owner=${INSTANCE_OWNER}" \
+            -var "instance-type=t2.micro" \
+            -var "asg-health-check-grace-period=300" \
+            -var "asg-max-size=1" \
+            -var "asg-min-size=1" \
+            -var "circleci-token=${CIRCLECI_TOKEN}" \
+            -var "circleci-project=${CIRCLE_PROJECT_REPONAME}" \
+            -var "circleci-organization=${CIRCLE_PROJECT_USERNAME}" \
+            -var "godaddy-key=${GODADDY_API_KEY}" \
+            -var "godaddy-secret=${GODADDY_API_SECRET}" \
+            -var "domain=${DOMAIN}" \
+            -out=.terraform.plan
+
+  terraform_show:
+    executor: terraform_container
+    parameters:
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+    resource_class: small
+    steps:
+      - checkout
+      - terraform_exec:
+          command: show
+          region: << parameters.region >>
+
+  terraform_validate:
+    executor: terraform_container
+    resource_class: small
+    steps:
+      - checkout
+      - terraform_exec:
+          command: validate
+
+  terraform_apply:
+    executor: terraform_container
+    parameters:
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+    resource_class: small
+    steps:
+      - checkout
+      - terraform_exec:
+          command: apply
+          region: << parameters.region >>
+          parameters: |
+            -auto-approve \
+            -input=false \
+            .terraform.plan
+
+  terraform_destroy:
+    executor: terraform_container
+    parameters:
+      region:
+        type: string
+        default: << pipeline.parameters.default_region >>
+    resource_class: small
+    steps:
+      - checkout
+      - terraform_exec:
+          # alias for apply -destroy. Not sure why I can't pass it a cached plan.
+          command: destroy
+          region: << parameters.region >>
+          parameters: |
+            -auto-approve \
+            -input=false \
+            .terraform.plan
 
 workflows:
   version: 2
@@ -42,10 +256,36 @@ workflows:
               ignore:
                 - master
 
+  infrastructure-on-commit:
+    jobs:
+      - terraform_validate:
+          name: terraform-validate
+          context:
+            - production
+            - godaddy
+      - terraform_plan:
+          name: terraform-plan
+          context:
+            - production
+            - godaddy
+          requires:
+            - terraform-validate
+      - terraform_apply:
+          name: terraform-apply
+          context:
+            - production
+            - godaddy
+          requires:
+            - terraform-plan
+      - register:
+          name: webhook-registration
+          requires:
+            - terraform-apply
+
   daily:
     triggers:
       - schedule:
-          cron: "5 8 * * *"
+          cron: "5 12 * * *"
           filters:
             branches:
               only:

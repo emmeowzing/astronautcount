@@ -1,0 +1,62 @@
+#cloud-config
+users:
+  - default
+  - name: astronaut
+    ssh_import_id: None
+    lock_passwd: true
+    ssh_authorized_keys:
+      - ${ssh_public_key}
+    sudo:
+      - 'ALL=(ALL) NOPASSWD:ALL'
+    shell: /bin/bash
+
+packages:
+  - unzip
+  - curl
+  - python3-pip
+
+write_files:
+  - path: /etc/ssh/sshd_config
+    content: |
+      Port ${ssh_port}
+      ListenAddress 0.0.0.0
+      ListenAddress ::
+      LogLevel ERROR
+      PermitRootLogin no
+      ChallengeResponseAuthentication no
+      UsePAM yes
+      AllowAgentForwarding no
+      GatewayPorts no
+      X11Forwarding no
+      KerberosAuthentication no
+      PrintMotd no
+      TCPKeepAlive yes
+      ClientAliveInterval 3
+      ClientAliveCountMax 3
+      AcceptEnv LANG LC_*
+      Subsystem       sftp    /usr/lib/openssh/sftp-server
+      AllowUsers astronaut
+
+runcmd:
+  - 'systemctl restart sshd.service'
+  # Install the latest AWS CLI.
+  - 'curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"'
+  - 'unzip -q awscliv2.zip'
+  - './aws/install'
+  # Associate allocated EIP with this instance.
+  - 'aws ec2 --region ${region} associate-address --public-ip ${public_ip} --instance-id "$(curl http://169.254.169.254/latest/meta-data/instance-id)"'
+  # Install miniconda
+  - 'wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda3.sh'
+  - 'chmod +x miniconda3.sh'
+  - './miniconda.sh -b'
+  - 'export PATH=/home/ubuntu/miniconda/bin:$PATH'
+  - 'conda update --yes conda'
+  # Set up Python 3.9 and astronautcount gunicorn
+  - 'git clone git@github.com:bjd2385/astronautcount.git'
+  - 'cd astronautcount'
+  - 'git checkout -b development origin/development'
+  - 'conda create --yes -n astronaut python=3.9'
+  - 'source activate astronaut'
+  - 'pip install -r requirements.txt'
+  - 'python setup.py install'
+  - 'bash app.sh'

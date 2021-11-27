@@ -5,13 +5,14 @@ import pathlib
 from setuptools import setup, find_packages
 from src import bot
 
+
 here = pathlib.Path(__file__).parent.resolve()
 
 # Get the long description from the README file
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
-    name='astronautbot',
+    name='astronautcount',
     version=bot.__version__,
     description=bot.__doc__,
     long_description=long_description,
@@ -22,10 +23,12 @@ setup(
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
     python_requires='>=3.9, <4',
+    url = 'https://github.com/bjd2385/astronautbot',
     install_requires=[
         'requests>=2.26.0',
         'urllib3>=1.26.7',
-        'tweepy>=4.1.0'
+        'tweepy>=4.1.0',
+        'Flask>=2.0.2'
     ],
     entry_points={
         'console_scripts': [
