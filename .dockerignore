@@ -1,9 +1,14 @@
 .env
 .pre-commit-config.yaml
 .python-version
+.terraform-version
+.mypy.ini
+app.sh
+img
 .gitignore
 .github
 .circleci
 *.egg-info
 .idea
 .mypy_cache
+package.json

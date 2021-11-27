@@ -278,7 +278,7 @@ workflows:
           requires:
             - terraform-plan
       - register:
-          name: Twitter webhook registration
+          name: webhook-registration
           requires:
             - terraform-apply
 
