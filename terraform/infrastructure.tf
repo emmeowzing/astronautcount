@@ -30,6 +30,7 @@ module "https_certificate" {
 
   region = var.region
   fqdn   = "twitter.${var.domain}"
+  domain = var.domain
 }
 
 module "godaddy_domain_forwarding" {
@@ -38,7 +39,8 @@ module "godaddy_domain_forwarding" {
   godaddy-key    = var.godaddy-key
   godaddy-secret = var.godaddy-secret
 
-  domain = var.domain
+  domain       = var.domain
+  name_servers = module.https_certificate.name_servers
   records = [
     {
       "name" : "twitter"
