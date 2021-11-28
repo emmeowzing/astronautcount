@@ -25,6 +25,6 @@ resource "aws_acm_certificate" "astronautcount" {
 }
 
 resource "aws_acm_certificate_validation" "astronautcount" {
-  certificate_arn         = aws_acm_certificate.example.arn
+  certificate_arn         = aws_acm_certificate.astronautcount.arn
   validation_record_fqdns = [aws_route53_record.twitter.fqdn]
 }
