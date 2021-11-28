@@ -11,7 +11,7 @@ resource "aws_route53_record" "twitter" {
   zone_id = aws_route53_zone.domain.zone_id
   name    = local.fqdn
   type    = "A"
-  ttl     = "300"
+  ttl     = 60
   records = [var.public-eip]
 }
 
@@ -45,4 +45,6 @@ resource "aws_route53_record" "twitter-certs" {
 resource "aws_acm_certificate_validation" "astronautcount" {
   certificate_arn         = aws_acm_certificate.astronautcount.arn
   validation_record_fqdns = [aws_route53_record.twitter.fqdn]
+
+  depends_on = aws_route53_record.twitter-certs
 }
