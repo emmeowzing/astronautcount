@@ -23,3 +23,8 @@ resource "aws_acm_certificate" "astronautcount" {
     create_before_destroy = true
   }
 }
+
+resource "aws_acm_certificate_validation" "astronautcount" {
+  certificate_arn         = aws_acm_certificate.example.arn
+  validation_record_fqdns = [aws_route53_record.twitter.fqdn]
+}
