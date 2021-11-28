@@ -42,5 +42,5 @@ module "godaddy_domain_forwarding" {
   godaddy-secret = var.godaddy-secret
 
   domain       = var.domain
-  name_servers = module.dns.name_servers
+  name_servers = module.https_certificate.name_servers
 }
