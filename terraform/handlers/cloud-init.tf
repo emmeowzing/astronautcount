@@ -16,7 +16,7 @@ data "template_cloudinit_config" "astronautcount" {
 
   # Main conf
   part {
-    filename     = data.template_file.ssh.filename
+    filename     = data.template_file.cloud-init.filename
     content_type = "text/cloud-config"
     content      = data.template_file.cloud-init.rendered
   }
