@@ -1,5 +1,10 @@
+resource "aws_route53_zone" "twitter" {
+  name = var.domain
+}
+
 resource "godaddy_domain_record" "aperiodicity" {
-  domain = var.domain
+  domain      = var.domain
+  nameservers = aws_route53_zone.twitter.name_servers
 
   dynamic "record" {
     for_each = var.records

@@ -1,8 +1,9 @@
 name: Docker Build
+
 on:
   release:
-    branches:
-      - master
+    tags:
+      - "v*"
 
   workflow_dispatch:
 
