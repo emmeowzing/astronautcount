@@ -7,7 +7,7 @@ This is the repository for [@astronautcount](https://twitter.com/astronautcount)
 
 Project structure consists of
 
-- `terraform/` - houses the IaC to build a backend (spot) instance that a Flask-based inbound webhook handler resides on, and
+- `terraform/` - houses the IaC to build a backend (spot) instance that a Flask-based inbound webhook handler resides on.
 - `src/` - which contains two small Python packages, including
   - `handler`, the Flask app already mentioned, and
   - `bot`, a Python-based bot that CircleCI executes every day for a daily morning tweet.

@@ -1,7 +1,3 @@
-"""
-A Twitter bot that posts the number of astronauts in space every day.
-"""
-
 from typing import Dict, Any, List
 
 import tweepy

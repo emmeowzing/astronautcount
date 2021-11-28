@@ -3,7 +3,6 @@
 import pathlib
 
 from setuptools import setup, find_packages
-from src import bot
 
 
 here = pathlib.Path(__file__).parent.resolve()
@@ -13,13 +12,13 @@ long_description = (here / 'README.md').read_text(encoding='utf-8')
 
 setup(
     name='astronautcount',
-    version=bot.__version__,
-    description=bot.__doc__,
+    version='0.1.0',
+    description='A Twitter bot that posts the number of astronauts in space every day.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Brandon Doyle',
     author_email='bjd2385.linux@gmail.com',
-    keywords='Astronaut, NASA',
+    keywords='Astronaut, NASA, Twitter, bot',
     package_dir={'': 'src'},
     packages=find_packages(where='src'),
     python_requires='>=3.9, <4',
@@ -28,7 +27,10 @@ setup(
         'requests>=2.26.0',
         'urllib3>=1.26.7',
         'tweepy>=4.1.0',
-        'Flask>=2.0.2'
+        'Flask>=2.0.2',
+        'gunicorn>=20.1.0',
+        'psutil==5.8.0',
+        'twitterwebhooks==1.0.0'
     ],
     entry_points={
         'console_scripts': [

@@ -52,11 +52,7 @@ runcmd:
   - 'export PATH=/home/ubuntu/miniconda/bin:$PATH'
   - 'conda update --yes conda'
   # Set up Python 3.9 and astronautcount gunicorn
-  - 'git clone git@github.com:bjd2385/astronautcount.git'
-  - 'cd astronautcount'
-  - 'git checkout -b development origin/development'
   - 'conda create --yes -n astronaut python=3.9'
   - 'source activate astronaut'
-  - 'pip install -r requirements.txt'
-  - 'python setup.py install'
+  - 'pip install astronautbot'
   - 'bash app.sh'
