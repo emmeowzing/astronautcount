@@ -46,5 +46,5 @@ resource "aws_acm_certificate_validation" "astronautcount" {
   certificate_arn         = aws_acm_certificate.astronautcount.arn
   validation_record_fqdns = [aws_route53_record.twitter.fqdn]
 
-  depends_on = aws_route53_record.twitter-certs
+  depends_on = [aws_route53_record.twitter-certs]
 }
