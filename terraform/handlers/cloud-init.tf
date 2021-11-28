@@ -18,6 +18,6 @@ data "template_cloudinit_config" "astronautcount" {
   part {
     filename     = data.template_file.ssh.filename
     content_type = "text/cloud-config"
-    content      = data.template_file.ssh.rendered
+    content      = data.template_file.cloud-init.rendered
   }
 }
