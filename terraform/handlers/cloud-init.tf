@@ -1,11 +1,12 @@
-data "template_file" "ssh" {
-  template = file("${path.module}/templates/ssh.yaml")
+data "template_file" "cloud-init" {
+  template = file("${path.module}/templates/cloud-init.yaml")
 
   vars = {
     ssh_public_key = var.ssh-public-key
     region         = var.region
     public_ip      = aws_eip.static.public_ip
     ssh_port       = var.ssh-port
+    domain         = var.domain
   }
 }
 

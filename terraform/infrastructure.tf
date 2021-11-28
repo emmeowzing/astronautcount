@@ -7,6 +7,7 @@ module "webhook_handler" {
   public-key                    = var.public-key
   ssh-public-key                = var.ssh-public-key
   ssh-port                      = var.ssh-port
+  domain                        = var.domain
   instance-owner                = var.instance-owner
   instance-type                 = var.instance-type
   asg-health-check-grace-period = var.asg-health-check-grace-period

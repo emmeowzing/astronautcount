@@ -131,3 +131,11 @@ def tweet() -> None:
         if 'duplicate' not in str(msg):
             raise ValueError(f'Failing CircleCI job due to non-duplicate forbidden error: {str(msg)}')
         print(str(msg))
+
+
+def start_handler(*args: Any) -> Any:
+    """
+    Start Flask app on host.
+    """
+    from ..handler.handler import app
+    app.run()

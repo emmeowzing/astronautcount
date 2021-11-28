@@ -55,4 +55,6 @@ runcmd:
   - 'conda create --yes -n astronaut python=3.9'
   - 'source activate astronaut'
   - 'pip install astronautbot'
-  - 'bash app.sh'
+  # LetsEncrypt via https://github.com/srvrco/getssl
+  - 'curl --silent https://raw.githubusercontent.com/srvrco/getssl/latest/getssl > getssl ; chmod 700 getssl'
+  - './getssl -c twitter.${domain}'
