@@ -25,8 +25,8 @@ module "circleci_environment" {
   circleci-organization = var.circleci-organization
 }
 
-module "https_certificate" {
-  source = "./acm/"
+module "dns" {
+  source = "./dns/"
 
   region     = var.region
   subdomain  = "twitter"
@@ -41,5 +41,5 @@ module "godaddy_domain_forwarding" {
   godaddy-secret = var.godaddy-secret
 
   domain       = var.domain
-  name_servers = module.https_certificate.name_servers
+  name_servers = module.dns.name_servers
 }
