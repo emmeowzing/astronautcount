@@ -1,4 +1,6 @@
 #cloud-config
+hostname: station
+
 users:
   - default
   - name: astronaut
@@ -55,6 +57,7 @@ runcmd:
   - 'conda create --yes -n astronaut python=3.9'
   - 'source activate astronaut'
   - 'pip install astronautbot'
-  # LetsEncrypt via https://github.com/srvrco/getssl
-  - 'curl --silent https://raw.githubusercontent.com/srvrco/getssl/latest/getssl > getssl ; chmod 700 getssl'
-  - './getssl -c twitter.${domain}'
+  # Certs & app
+  - 'aws s3 cp s3://certs-1638123741/astronautcount/twitter.csr /etc/ssl/twitter.crt'
+  - 'aws s3 cp s3://certs-1638123741/astronautcount/twitter.key /etc/ssl/twitter.key'
+  - 'gunicorn --certfile /etc/ssl/twitter.crt --keyfile /etc/ssl/twitter.key -c src/handler/gunicorn.py handler.handler:app &'
