@@ -28,9 +28,10 @@ module "circleci_environment" {
 module "https_certificate" {
   source = "./acm/"
 
-  region = var.region
-  fqdn   = "twitter.${var.domain}"
-  domain = var.domain
+  region     = var.region
+  subdomain  = "twitter"
+  domain     = var.domain
+  public-eip = module.webhook_handler.public-eip
 }
 
 module "godaddy_domain_forwarding" {
@@ -41,11 +42,4 @@ module "godaddy_domain_forwarding" {
 
   domain       = var.domain
   name_servers = module.https_certificate.name_servers
-  records = [
-    {
-      "name" : "twitter"
-      "type" : "A"
-      "data" : module.webhook_handler.public-eip
-    }
-  ]
 }

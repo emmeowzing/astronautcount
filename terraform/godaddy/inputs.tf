@@ -10,8 +10,4 @@ variable "godaddy-secret" {
 
 variable "domain" { type = string }
 
-variable "records" {
-  type = list(map(string))
-}
-
 variable "name_servers" { type = list(string) }
