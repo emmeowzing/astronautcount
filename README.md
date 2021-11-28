@@ -15,7 +15,3 @@ Project structure consists of
 ### Where does the data come from?
 
 At-current, this bot pulls data from [Open Notify's API](http://open-notify.org/Open-Notify-API/People-In-Space/), which is maintained by Nathan Bergey ([@natronics](https://twitter.com/natronics)). This is, as far as I'm aware, both the only publicly-accessible and regularly updated API for these data.
-
-### Development
-
-Don't forget to increment `src/bot/__init__.__version__` for new releases!
