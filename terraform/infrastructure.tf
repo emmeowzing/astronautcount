@@ -26,8 +26,8 @@ module "circleci_environment" {
   circleci-organization = var.circleci-organization
 }
 
-module "dns" {
-  source = "./dns/"
+module "https_certificate" {
+  source = "./https_certificate/"
 
   region     = var.region
   subdomain  = "twitter"
