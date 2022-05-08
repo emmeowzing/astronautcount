@@ -5,97 +5,13 @@ setup: true
 orbs:
   dynamic: bjd2385/dynamic-continuation@3.0.0
 
-parameters:
-  default_region:
-    type: string
-    default: us-east-2
-
-executors:
-  python3:
-    docker:
-      - image: python:3.9
-  terraform_container:
-    docker:
-      - image: hashicorp/terraform:1.0.7
-  base:
-    docker:
-      - image: cimg/base:2021.04
-  node:
-    docker:
-      - image: node:16
-
-commands:
-  twitter-autohook:
-    description: Register PUBLIC_EIP address
-    steps:
-      - run:
-          name: Install dependencies
-          command: npm i
-      - run:
-          name: Register node
-          command: |
-            # https://www.npmjs.com/package/twitter-autohook#cli
-            # autohook \
-            #   --reset \
-            #   --token $TWITTER_ACCESS_TOKEN \
-            #   --secret $TWITTER_ACCESS_TOKEN_SECRET \
-            #   --consumer-key $TWITTER_CONSUMER_KEY \
-            #   --consumer-secret $TWITTER_CONSUMER_SECRET \
-            #   --env $TWITTER_WEBHOOK_ENV
-            node scripts/autohook.js
-
-  astrobot_tweet:
-    description: Send a Tweet
-    steps:
-      - run:
-          name: Install Python package
-          command: |
-            pip install -r requirements.txt
-            python setup.py install
-      - run:
-          name: Execute astrobot
-          command: astrobot
-
-jobs:
-  register:
-    executor: node
-    resource_class: small
-    steps:
-      - checkout
-      - twitter-autohook
-
-  tweet:
-    executor: python3
-    resource_class: small
-    steps:
-      - checkout
-      - astrobot_tweet
-
 workflows:
   version: 2
 
-  test-tweet-on-commit:
+  default:
     jobs:
-      - tweet:
-          filters:
-            branches:
-              ignore:
-                - master
-      - register:
-          name: webhook-registration
-
       - dynamic/extend:
           context: orb-publishing
           modules: |
             terraform
-
-  daily:
-    triggers:
-      - schedule:
-          cron: "5 12 * * *"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - tweet
+            .

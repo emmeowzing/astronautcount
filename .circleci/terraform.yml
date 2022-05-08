@@ -5,6 +5,11 @@ executors:
     docker:
       - image: hashicorp/terraform:1.0.7
 
+parameters:
+  default_region:
+    type: string
+    default: us-east-2
+
 commands:
   terraform_exec:
     parameters:
