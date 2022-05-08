@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "twitter-autohook": "^1.7.2"
+    "twitter-autohook": "1.7.2"
   }
 }
