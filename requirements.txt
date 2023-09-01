@@ -6,7 +6,7 @@ charset-normalizer==2.0.6
 check-manifest==0.47
 click==8.0.3
 entrypoints==0.3
-Flask==2.0.2
+Flask==2.3.3
 gunicorn==20.1.0
 idna==3.2
 itsdangerous==2.0.1
